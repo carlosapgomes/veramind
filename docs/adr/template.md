@@ -1,23 +1,25 @@
-# ADR-XXXX: Titulo
+# ADR-XXXX: Title
+
+[Portuguese (Brazil)](./template.pt-BR.md)
 
 ## Status
 
 [Proposed | Accepted | Deprecated | Superseded]
 
-## Contexto
+## Context
 
-[Situacao e motivacao]
+[Situation and motivation]
 
-## Decisao
+## Decision
 
-[O que foi decidido]
+[What was decided]
 
-## Alternativas Consideradas
+## Alternatives Considered
 
-1. [Alternativa 1]
-2. [Alternativa 2]
+1. [Alternative 1]
+2. [Alternative 2]
 
-## Consequencias
+## Consequences
 
-- Positivas:
-- Negativas/Trade-offs:
+- Positives:
+- Negatives/Trade-offs:

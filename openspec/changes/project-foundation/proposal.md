@@ -2,31 +2,32 @@
 
 ## Why
 
-O repositorio possui notas de arquitetura e artefatos basicos, mas
-ainda nao registra de forma normativa:
+The repository contains architecture notes and basic artifacts, but it
+does not yet record the following in a normative way:
 
-- o stack inicial do MVP
-- a metodologia de engenharia adotada
-- as fronteiras arquiteturais que devem guiar os proximos slices
+- the initial MVP stack
+- the adopted engineering methodology
+- the architectural boundaries that should guide the next slices
 
-Sem esse alinhamento, os proximos specs e implementacoes tendem a
-divergir em linguagem, tooling e estrutura modular.
+Without that alignment, future specs and implementations tend to diverge
+in language, tooling, and modular structure.
 
 ## What Changes
 
-- Definir TypeScript/Node.js/npm como stack base do MVP
-- Formalizar TDD como politica obrigatoria para novas funcionalidades e
-  bugfixes criticos
-- Registrar boundaries entre `agent runtime`, `memory layer`,
-  `tool layer` e `knowledge system`
-- Atualizar `AGENTS.md` e `PROJECT_CONTEXT.md` para refletir o estado
-  real do projeto
-- Registrar a decisao em ADR
-- Criar o scaffold inicial em TypeScript com testes, lint e type-check
+- Define TypeScript/Node.js/npm as the MVP base stack
+- Formalize TDD as a required policy for new features and critical bug
+  fixes
+- Record boundaries between `agent runtime`, `memory layer`,
+  `tool layer`, and `knowledge system`
+- Update `AGENTS.md` and `PROJECT_CONTEXT.md` to reflect the actual
+  project state
+- Record the decision in an ADR
+- Create the initial TypeScript scaffold with test, lint, and
+  type-check support
 
 ## Impact
 
-- Melhora consistencia dos proximos slices
-- Reduz ambiguidade operacional
-- Prepara o repositorio para o scaffold inicial sem impor implementacao
-  prematura
+- Improves consistency for future slices
+- Reduces operational ambiguity
+- Prepares the repository for the initial scaffold without forcing
+  premature implementation

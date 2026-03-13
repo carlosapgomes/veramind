@@ -1,10 +1,11 @@
 # PROJECT_CONTEXT.md
 
-## Proposito
+## Purpose
 
-Resumo executivo para retomada rapida apos pausas e para onboarding de novos contribuidores.
+Executive summary for quick resumption after pauses and for onboarding
+new contributors.
 
-## Fontes Autoritativas
+## Authoritative Sources
 
 - `AGENTS.md`
 - `openspec/specs/`
@@ -12,77 +13,86 @@ Resumo executivo para retomada rapida apos pausas e para onboarding de novos con
 - `docs/adr/`
 - `docs/releases/`
 - `texts/personal_agent_architecture_notes.md`
-- Em caso de conflito: specs/artefatos mais recentes no Git prevalecem.
+- If conflicts exist, the most recent specs and artifacts in Git win.
 
-## Objetivo do Sistema
+## System Goal
 
-Construir um agente pessoal de IA ("Second Brain / Personal OS") com
-memoria duravel, ferramentas explicitas e base consultavel de
-conhecimento.
+Build a personal AI agent ("Second Brain / Personal OS") with durable
+memory, explicit tools, and a consultable knowledge base.
 
-O sistema deve ajudar o usuario a:
+The system should help the user:
 
-- preservar contexto de longo prazo
-- recuperar informacoes relevantes no momento certo
-- executar fluxos orientados por ferramentas com seguranca
-- evoluir de forma incremental, com arquitetura simples e observavel
+- preserve long-term context
+- recover relevant information at the right time
+- execute tool-oriented flows safely
+- evolve incrementally with a simple and observable architecture
 
-## Arquitetura de Alto Nivel
+## High-Level Architecture
 
-- **agent runtime**: Orquestracao do agente, prompts, contexto e
-  chamada de ferramentas.
-- **memory layer**: Memoria duravel sobre usuario, preferencias,
-  decisoes e projetos ativos.
-- **tool layer**: Ferramentas explicitas e wrappers controlados para
-  capacidades do agente.
-- **knowledge system**: Base consultavel de documentos, notas e referencias.
-- **docs** (docs): Documentacao e rastreabilidade.
-- **scripts** (scripts): Automacoes e utilitarios.
-- **tests** (tests): Suite de testes automatizados.
+- **agent runtime**: Orchestrates the agent, prompts, context, and tool
+  calls.
+- **memory layer**: Stores durable information about the user,
+  preferences, decisions, and active projects.
+- **tool layer**: Exposes explicit tools and controlled wrappers for
+  agent capabilities.
+- **knowledge system**: Provides a consultable base of documents, notes,
+  and references.
+- **docs** (`docs`): Documentation and traceability.
+- **scripts** (`scripts`): Automation and utility scripts.
+- **tests** (`tests`): Automated test suite.
 
-Direcao de dependencias desejada:
+Desired dependency direction:
 
 - `agent runtime -> memory/tool/knowledge contracts`
-- `tool layer -> adapters externos`
-- sem dependencia reversa para o runtime
+- `tool layer -> external adapters`
+- no reverse dependency into the runtime
 
-Stack inicial acordado:
+Agreed initial stack:
 
 - TypeScript
 - Node.js 22 LTS
 - npm
 - Vitest
-- ESLint + Prettier
-- Postgres + pgvector como alvo de persistencia
-- pi-mono como runtime de agente pretendido
+- ESLint + Prettier + markdownlint-cli
+- Postgres + pgvector as the target persistence architecture
+- pi-mono as the intended agent runtime
 
-Estado atual do projeto:
+Current project state:
 
-- Fase de fundacao e definicao de especificacoes
-- Scaffold inicial de aplicacao TypeScript criado
-- Boundaries arquiteturais iniciais codificadas em modulo testado
+- Foundation and specification phase
+- Initial TypeScript application scaffold is in place
+- Initial architectural boundaries are encoded in a tested module
 
-## Regras Nao Negociaveis
+## Documentation Policy
 
-- Nao quebrar contratos publicos de API sem mudanca versionada.
-- Toda mudanca relevante deve deixar evidencia no Git (spec/task/commit).
-- Manter boundaries explicitos entre runtime, memoria, ferramentas e
-  conhecimento.
-- Preferir wrappers controlados a acesso irrestrito ao shell.
-- Priorizar simplicidade e capacidade de iteracao sobre arquitetura prematura.
+- English is the default language for normative project artifacts.
+- `README.md` and relevant documents under `docs/` must maintain a
+  synchronized `pt-BR` mirror.
+- Bilingual document pairs must be updated together in the same change.
+
+## Non-Negotiable Rules
+
+- Do not break public API contracts without a versioned change.
+- Every relevant change must leave evidence in Git
+  (spec, task, and commit).
+- Keep explicit boundaries between runtime, memory, tools, and
+  knowledge.
+- Prefer controlled wrappers over unrestricted shell access.
+- Prioritize simplicity and iteration capability over premature
+  architecture.
 
 ## Quality Bar
 
-- Testes relevantes executam localmente antes de merge.
-- Lint e checks estaticos sem erros criticos.
-- Mudancas com risco medio/alto devem ter plano de rollback.
-- Novas funcionalidades e bugfixes criticos seguem TDD.
-- Documentacao operacional deve refletir o estado real do repositorio.
+- Relevant tests run locally before merge.
+- Lint and static checks pass without critical errors.
+- Medium/high-risk changes require a rollback plan.
+- New features and critical bug fixes follow TDD.
+- Operational documentation must reflect the actual repository state.
+- Bilingual document mirrors stay synchronized.
 
-## Proximos Slices Provaveis
+## Likely Next Slices
 
-- Especificacao da camada de memoria
-- ADRs complementares para boundaries, persistencia e modelo de
-  ferramentas
+- Specify the memory layer foundation
+- Add ADRs for boundaries, persistence, and the tool model
 
 <!-- generated-by: project-context-maintainer -->

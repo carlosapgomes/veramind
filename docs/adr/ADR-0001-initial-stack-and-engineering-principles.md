@@ -1,65 +1,64 @@
-# ADR-0001: Stack inicial e principios de engenharia
+# ADR-0001: Initial stack and engineering principles
+
+[Portuguese (Brazil)](./ADR-0001-initial-stack-and-engineering-principles.pt-BR.md)
 
 ## Status
 
 Accepted
 
-## Contexto
+## Context
 
-O projeto esta na fase de fundacao. As notas iniciais de arquitetura
-definem quatro blocos principais do sistema: `agent runtime`,
-`memory layer`, `tool layer` e `knowledge system`.
+The project is in its foundation phase. The initial architecture notes
+define four main building blocks: `agent runtime`, `memory layer`,
+`tool layer`, and `knowledge system`.
 
-Antes de detalhar funcionalidades, o repositorio precisa de uma base
-tecnica e metodologica consistente para:
+Before detailing product functionality, the repository needs a
+consistent technical and methodological base to:
 
-- reduzir atrito na implementacao do MVP
-- alinhar o stack com o runtime de agente pretendido (`pi-mono`)
-- garantir fronteiras modulares claras
-- reforcar TDD e rastreabilidade desde o inicio
+- reduce friction for MVP implementation
+- align the stack with the intended agent runtime (`pi-mono`)
+- guarantee clear modular boundaries
+- reinforce TDD and traceability from the start
 
-## Decisao
+## Decision
 
-Padronizar o MVP em:
+Standardize the MVP on:
 
-- TypeScript como linguagem principal
-- Node.js 22 LTS como runtime
-- npm como gerenciador de pacotes
-- Vitest para testes
-- ESLint e Prettier para qualidade de codigo e formatacao
-- markdownlint-cli para validacao da documentacao
+- TypeScript as the primary language
+- Node.js 22 LTS as the runtime
+- npm as the package manager
+- Vitest for testing
+- ESLint and Prettier for code quality and formatting
+- markdownlint-cli for documentation validation
 
-Tambem ficam estabelecidos os seguintes principios de engenharia:
+The following engineering principles are also established:
 
-- aplicar TDD em novas funcionalidades e bugfixes criticos
-- preservar boundaries explicitos entre `agent runtime`, `memory layer`,
-  `tool layer` e `knowledge system`
-- manter dependencias unidirecionais, sem acoplamento reverso ao runtime
-- expor capacidades do agente por ferramentas explicitas e wrappers
-  controlados
-- priorizar simplicidade, observabilidade e iteracao rapida no MVP
+- apply TDD to new features and critical bug fixes
+- preserve explicit boundaries between `agent runtime`, `memory layer`,
+  `tool layer`, and `knowledge system`
+- keep dependencies unidirectional, without reverse coupling into the
+  runtime
+- expose agent capabilities through explicit tools and controlled
+  wrappers
+- prioritize simplicity, observability, and fast iteration in the MVP
 
-Como decisao arquitetural de alvo, a persistencia inicial planejada
-para memoria e conhecimento e Postgres com suporte a `pgvector`.
+As a target architectural decision, the planned initial persistence
+layer for memory and knowledge is Postgres with `pgvector` support.
 
-## Alternativas Consideradas
+## Alternatives Considered
 
-1. Python como linguagem principal do MVP
-2. Arquitetura hibrida inicial com TypeScript + Python desde o primeiro
-   slice
-3. Adiar a decisao de stack ate o primeiro prototipo funcional
+1. Python as the MVP primary language
+2. A hybrid TypeScript + Python architecture from the first slice
+3. Delaying the stack decision until the first functional prototype
 
-## Consequencias
+## Consequences
 
-- Positivas:
-  - reduz atrito com o runtime `pi-mono`
-  - unifica a base de codigo do MVP em uma unica linguagem
-  - acelera a criacao de testes, ferramentas e contratos de modulo
-  - torna operacionais as politicas de qualidade documentadas em
-    `AGENTS.md`
-- Negativas/Trade-offs:
-  - componentes futuros mais orientados a ML podem exigir integracao
-    com Python
-  - a equipe fica inicialmente mais acoplada ao ecossistema Node.js
-  - a persistencia em Postgres fica decidida cedo, ainda sem benchmark
-    local
+- Positives:
+  - reduces friction with the `pi-mono` runtime
+  - unifies the MVP codebase under one language
+  - accelerates the creation of tests, tools, and module contracts
+  - makes the quality policies documented in `AGENTS.md` operational
+- Negatives/Trade-offs:
+  - future ML-oriented components may still require Python integration
+  - the team becomes initially more coupled to the Node.js ecosystem
+  - Postgres is chosen early, before local benchmarking exists

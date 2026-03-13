@@ -1,3 +1,5 @@
 # Releases
 
-Armazene evidencias de release em `YYYY-MM-DD_vX.Y.Z.md`.
+[Portuguese (Brazil)](./README.pt-BR.md)
+
+Store release evidence in `YYYY-MM-DD_vX.Y.Z.md`.

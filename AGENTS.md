@@ -1,26 +1,26 @@
 # AGENTS.md
 
-## 1. Stack e Versoes
+## 1. Stack and Versions
 
-- Linguagem principal do MVP: TypeScript
+- MVP primary language: TypeScript
 - Runtime: Node.js 22 LTS
-- Gerenciador de pacotes: npm
-- Testes: Vitest
-- Qualidade: ESLint, Prettier e markdownlint-cli
-- Persistencia alvo da arquitetura: Postgres + pgvector
-- Runtime de agente pretendido: pi-mono
+- Package manager: npm
+- Testing: Vitest
+- Quality tooling: ESLint, Prettier, and markdownlint-cli
+- Target persistence architecture: Postgres + pgvector
+- Intended agent runtime: pi-mono
 
-## 2. Comandos de Validacao (Quality Gate)
+## 2. Validation Commands (Quality Gate)
 
-- Verificacao basica obrigatoria: `git status --short`
-- Documentacao/markdown: `bash scripts/markdown-lint.sh`
-- Testes unitarios: `npm run test`
-- Lint de codigo: `npm run lint`
+- Required basic check: `git status --short`
+- Documentation and markdown: `bash scripts/markdown-lint.sh`
+- Unit tests: `npm run test`
+- Code lint: `npm run lint`
 - Type-check: `npm run typecheck`
 
-## 3. Comandos Essenciais (Operacao Local)
+## 3. Essential Commands (Local Operation)
 
-### Operacao basica
+### Basic operation
 
 ```bash
 git status --short
@@ -28,7 +28,7 @@ git branch --show-current
 bash scripts/markdown-lint.sh
 ```
 
-### Operacao TypeScript
+### TypeScript operation
 
 ```bash
 npm install
@@ -37,58 +37,72 @@ npm run lint
 npm run typecheck
 ```
 
-## 4. Arquitetura e Constraints
+## 4. Architecture and Constraints
 
-- Definir boundaries explicitos por modulo e manter dependencias
-  unidirecionais.
-- Separar o sistema em `agent runtime`, `memory layer`, `tool layer`
-  e `knowledge system`.
-- Permitir dependencia do runtime para contratos de memoria,
-  ferramentas e conhecimento; nao permitir dependencia inversa.
-- Expor ferramentas por wrappers controlados; evitar shell cru como
-  interface publica.
-- Manter regras de negocio fora da camada de apresentacao/CLI.
+- Define explicit module boundaries and keep dependencies unidirectional.
+- Separate the system into `agent runtime`, `memory layer`,
+  `tool layer`, and `knowledge system`.
+- Allow the runtime to depend on memory, tool, and knowledge contracts;
+  do not allow reverse dependencies.
+- Expose capabilities through controlled wrappers; avoid raw shell as a
+  public interface.
+- Keep business rules out of presentation and CLI layers.
 
-## 5. Politica de Testes
+## 5. Testing Policy
 
-- TDD para novas funcionalidades e bugfixes criticos.
-- Aplicar ciclo red-green-refactor nas mudancas de dominio e contratos.
-- Priorizar testes unitarios; usar integracao para contratos e fluxos.
-- Ao tocar legado sem testes, adicionar ao menos um teste de caracterizacao.
-- Nao introduzir modulo novo sem cobertura de testes correspondente ao
-  comportamento principal.
+- Use TDD for new features and critical bug fixes.
+- Apply the red-green-refactor cycle to domain and contract changes.
+- Prioritize unit tests; use integration tests for contracts and flows.
+- When touching legacy code without tests, add at least one
+  characterization test.
+- Do not introduce a new module without tests that cover its primary
+  behavior.
 
-## 6. Stop Rule (CRUCIAL)
+## 6. Documentation Language Policy
 
-- Implementar uma task slice por vez.
-- Rodar comandos de validacao da secao 2.
-- Atualizar tasks/specs e parar para confirmacao do proximo slice.
+- `AGENTS.md`, `PROJECT_CONTEXT.md`, ADRs, and active OpenSpec artifacts
+  must use American English as the default language.
+- `README.md` and the relevant documents under `docs/` must have a
+  synchronized `pt-BR` mirror placed next to the English file.
+- Every change to a bilingual document must update both language
+  versions in the same slice.
+- English documents must link to the Portuguese mirror at the top.
+- Portuguese mirrors should link back to the English source at the top.
 
-## 7. Definition of Done (DoD)
+## 7. Stop Rule (CRUCIAL)
 
-- [ ] Build/check sem erros
-- [ ] Testes relevantes passando
-- [ ] Lint/type-check sem erros relevantes
-- [ ] Specs/docs atualizadas quando necessario
-- [ ] Commit com mensagem clara e rastreavel
-- [ ] Boundaries modulares preservados
+- Implement one task slice at a time.
+- Run the validation commands from section 2.
+- Update tasks, specs, and bilingual document mirrors.
+- Stop and ask for confirmation before starting the next slice.
 
-## 8. Anti-patterns Proibidos
+## 8. Definition of Done (DoD)
 
-- Nao criar classes/funcoes God object com responsabilidades demais.
-- Nao deixar TODO/FIXME sem issue ou plano.
-- Nao acoplar regras de negocio em camada de apresentacao.
-- Nao criar dependencia ciclica entre runtime, memoria, ferramentas e
-  conhecimento.
-- Nao expor acesso irrestrito ao shell como ferramenta default do
-  agente.
+- [ ] Build/check completes without errors
+- [ ] Relevant tests are passing
+- [ ] Lint and type-check pass without relevant errors
+- [ ] Specs and docs are updated when needed
+- [ ] Bilingual document pairs remain synchronized
+- [ ] Commit message is clear and traceable
+- [ ] Module boundaries remain preserved
 
-## 9. Prompt de Reentrada
+## 9. Prohibited Anti-Patterns
+
+- Do not create God objects with too many responsibilities.
+- Do not leave TODO/FIXME items without an issue or a concrete plan.
+- Do not couple business rules into the presentation layer.
+- Do not create cyclical dependencies between runtime, memory, tools,
+  and knowledge.
+- Do not expose unrestricted shell access as the default agent tool.
+
+## 10. Reentry Prompt
 
 ```text
 Read AGENTS.md and PROJECT_CONTEXT.md first.
 Implement ONLY the next incomplete slice from tasks/spec.
-Run section 2 validation commands, update artifacts, then STOP and ask confirmation.
+If a touched document is bilingual, update both language versions.
+Run section 2 validation commands, update artifacts, then STOP and ask
+for confirmation.
 ```
 
 <!-- generated-by: agents-md-generator -->

@@ -1,20 +1,22 @@
 # Tasks
 
-## 1. Documentacao de fundacao
+## 1. Foundation documentation
 
-- [x] Atualizar `AGENTS.md` com stack inicial, quality gate e politicas de engenharia
-- [x] Atualizar `PROJECT_CONTEXT.md` com objetivo, arquitetura e estado atual
-- [x] Registrar a decisao de stack e principios em ADR
-- [x] Criar a primeira change em `openspec`
+- [x] Update `AGENTS.md` with the initial stack, quality gate, and
+  engineering policies
+- [x] Update `PROJECT_CONTEXT.md` with the system goal, architecture,
+  and current state
+- [x] Record the stack decision and principles in an ADR
+- [x] Create the first change in `openspec`
 
-## 2. Scaffold inicial TypeScript
+## 2. Initial TypeScript scaffold
 
-- [x] Criar `package.json` e scripts de `test`, `lint` e `typecheck`
-- [x] Adicionar configuracao minima de TypeScript, Vitest e ESLint
-- [x] Codificar um modulo inicial com teste unitario para boundaries
-  arquiteturais
-- [x] Validar `npm run test`, `npm run lint` e `npm run typecheck`
+- [x] Create `package.json` and `test`, `lint`, and `typecheck` scripts
+- [x] Add minimal TypeScript, Vitest, and ESLint configuration
+- [x] Encode an initial module with unit tests for architectural
+  boundaries
+- [x] Validate `npm run test`, `npm run lint`, and `npm run typecheck`
 
-## 3. Proximo slice esperado
+## 3. Next expected slice
 
-- [ ] Especificar e implementar a fundacao da camada de memoria
+- [ ] Specify and implement the memory layer foundation

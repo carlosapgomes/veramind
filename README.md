@@ -1,20 +1,32 @@
 # veramind
 
-Breve descricao do projeto.
+[Portuguese (Brazil)](./README.pt-BR.md)
 
-## Workflow Kit SOP
+Personal AI agent foundation focused on durable memory, explicit tools,
+and a consultable knowledge base.
 
-Este repositorio usa AGENTS.md + PROJECT_CONTEXT.md + artefatos de especificacao.
+## Workflow
 
-## Artefatos principais
+This repository uses `AGENTS.md`, `PROJECT_CONTEXT.md`, ADRs, and
+OpenSpec artifacts to guide implementation slices.
+
+## Main Artifacts
 
 - `AGENTS.md`
 - `PROJECT_CONTEXT.md`
-- `docs/adr/`
-- `docs/releases/`
+- `docs/`
+- `openspec/`
 - `tests/`
 
-## Setup inicial
+## Bilingual Documentation
+
+- English is the default language for repository-level documentation.
+- `README.md` and the relevant documents under `docs/` have synchronized
+  `pt-BR` mirrors.
+- When editing a bilingual document, update both language versions in
+  the same slice.
+
+## Initial Setup
 
 ```bash
 npm install

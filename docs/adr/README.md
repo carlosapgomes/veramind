@@ -1,13 +1,15 @@
 # Architecture Decision Records
 
-Registros de decisoes arquiteturais importantes.
+[Portuguese (Brazil)](./README.pt-BR.md)
 
-## Como criar nova ADR
+This directory stores important architecture decisions.
 
-1. Copiar `template.md`
-2. Nomear com prefixo `ADR-XXXX-...`
-3. Atualizar este indice
+## How to Create a New ADR
 
-## Indice
+1. Copy `template.md`.
+2. Name the file with the `ADR-XXXX-...` prefix.
+3. Update this index.
 
-- `ADR-0001`: Stack inicial e principios de engenharia
+## Index
+
+- `ADR-0001`: Initial stack and engineering principles
