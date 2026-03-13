@@ -1,0 +1,5 @@
+.pi/**
+.codex/**
+node_modules/**
+.git/**
+texts/**

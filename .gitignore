@@ -1,0 +1,11 @@
+
+# dev-loop bootstrap rules
+prompts/
+.env
+*.secret
+texts/
+.codex/
+.pi/
+node_modules/
+coverage/
+dist/
