@@ -18,17 +18,18 @@ direction for the first Hermes-centered VeraBrain version.
 - **THEN** those artifacts identify Python as the preferred
   implementation direction for the Hermes-centered path
 
-### Requirement: Preserve the meaning of the existing TypeScript scaffold
+### Requirement: Retire the temporary TypeScript scaffold
 
-The project MUST distinguish between the existing repository scaffold and
-the current product implementation direction.
+Once the Python scaffold is runnable, the project MUST retire the
+temporary TypeScript/Node scaffold instead of keeping two primary
+repository foundations in parallel.
 
 #### Scenario: Contributor inspects the repository toolchain
 
-- **WHEN** a contributor sees TypeScript, npm, and Vitest artifacts in
-  the repository
-- **THEN** the documentation clarifies that those artifacts are existing
-  repository scaffolding rather than the primary product direction
+- **WHEN** a contributor inspects the repository after the Python
+  foundation exists
+- **THEN** the repository tooling centers on Python and `uv`
+- **AND** the temporary TypeScript/Node scaffold is no longer required
 
 ### Requirement: Align the roadmap with the new direction
 

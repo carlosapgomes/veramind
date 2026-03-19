@@ -146,3 +146,15 @@ for:
 - **WHEN** the runtime needs to persist or retrieve memory
 - **THEN** it uses explicit memory-layer contracts instead of bypassing
   the module boundary
+
+## Reconciliation Notes
+
+- The durable `memories` record shape, repository contracts, and initial
+  storage baseline have since been implemented through the archived
+  core-and-adapters and Postgres persistence changes.
+- Hybrid retrieval and bounded prompt injection have since been
+  implemented through the archived hybrid-retrieval change.
+- The remaining gap for this change is the explicit write pipeline:
+  classification on write, deduplication/update behavior, embedding
+  attachment during capture, and enforcement of the allowed `type` and
+  `scope` values.

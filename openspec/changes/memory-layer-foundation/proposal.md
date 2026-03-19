@@ -17,6 +17,8 @@ management, or introducing storage behavior that is hard to change.
 - Define the initial write pipeline for memory capture
 - Define the initial retrieval behavior for prompt augmentation
 - Explicitly record non-goals for the first memory slice
+- Reconcile this change against the later archived foundation and
+  retrieval changes that already implemented part of the memory baseline
 
 ## Non-Goals
 
@@ -31,3 +33,5 @@ management, or introducing storage behavior that is hard to change.
 - Clarifies what the first memory implementation slice should build
 - Protects the distinction between memory and the knowledge system
 - Creates a concrete contract for tests, tooling, and future ADRs
+- Makes the remaining gap explicit: the memory write pipeline still
+  needs classification, deduplication, and allowed-value enforcement

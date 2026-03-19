@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "verabrain"
+version = "0.1.0"
+description = "Python-first VeraBrain skeleton for the Hermes-centered architecture."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "mdformat>=0.7.22",
+  "pymarkdownlnt>=0.9.33",
+  "pyright>=1.1.403",
+  "pytest>=8.4.2",
+  "ruff>=0.13.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/verabrain"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+
+[tool.pyright]
+include = ["src/verabrain", "tests/python"]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+
+[tool.ruff]
+src = ["src", "tests"]
+target-version = "py311"

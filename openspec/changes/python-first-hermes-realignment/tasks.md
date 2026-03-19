@@ -11,8 +11,10 @@
 - [x] Record the realignment in OpenSpec
 - [x] Adjust roadmap artifacts to point to architecture design as the
   next slice
+- [x] Retire the temporary TypeScript/Node scaffold after the Python
+  scaffold became runnable
 
 ## 3. Next expected slice
 
-- [ ] Design the VeraBrain core and adapter boundaries for the
+- [x] Design the VeraBrain core and adapter boundaries for the
   Hermes-centered architecture

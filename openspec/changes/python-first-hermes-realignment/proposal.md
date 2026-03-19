@@ -2,20 +2,22 @@
 
 ## Why
 
-The repository foundation artifacts still reflect the earlier
-TypeScript-first standalone direction, while the current strategic
-direction is a Hermes-centered VeraBrain with MCP-first integration.
+The repository foundation artifacts and the temporary Node/TypeScript
+scaffold still reflect the earlier standalone direction, while the
+current strategic direction is a Hermes-centered VeraBrain with
+MCP-first integration.
 
 Without a formal stack realignment, future slices will continue to
 inherit conflicting assumptions about implementation language, runtime
-context, and the meaning of the existing TypeScript scaffold.
+context, and whether the temporary Node/TypeScript scaffold is still a
+live part of the product path.
 
 ## What Changes
 
 - Record Python 3.11+ as the primary implementation direction for the
   Hermes-centered VeraBrain path
-- Clarify that the existing TypeScript scaffold is a legacy foundation
-  artifact, not the main product direction
+- Retire the temporary TypeScript/Node scaffold once the Python
+  foundation becomes runnable
 - Update operational and context artifacts to reflect the new stack
   stance
 - Adjust the roadmap so the next slice focuses on core-and-adapter
@@ -26,5 +28,5 @@ context, and the meaning of the existing TypeScript scaffold.
 - Makes repository guidance internally consistent again
 - Prevents the next architecture slice from being framed around the old
   standalone runtime assumption
-- Preserves a clear transition path from existing repository scaffold to
-  future Python implementation work
+- Completes the transition from temporary Node scaffolding to the
+  Python-first implementation path

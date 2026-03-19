@@ -9,3 +9,7 @@ texts/
 node_modules/
 coverage/
 dist/
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/

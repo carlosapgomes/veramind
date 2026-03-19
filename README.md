@@ -29,8 +29,9 @@ OpenSpec artifacts to guide implementation slices.
 ## Initial Setup
 
 ```bash
-npm install
-npm run test
-npm run lint
-npm run typecheck
+uv sync
+bash scripts/markdown-lint.sh
+uv run pytest
+uv run ruff check .
+uv run pyright
 ```

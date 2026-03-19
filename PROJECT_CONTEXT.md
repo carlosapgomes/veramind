@@ -10,6 +10,7 @@ new contributors.
 - `AGENTS.md`
 - `openspec/specs/`
 - `openspec/changes/`
+- `openspec/changes/archive/`
 - `docs/adr/`
 - `docs/releases/`
 - `texts/personal_agent_architecture_notes.md`
@@ -52,10 +53,8 @@ Agreed initial stack:
 - Python 3.11+ as the primary implementation direction for
   VeraBrain-on-Hermes
 - `uv` as the intended Python package and environment manager
-- TypeScript/Node.js as the existing repository scaffold, not the
-  primary product direction
-- Current repository checks: Vitest, ESLint, Prettier, and
-  markdownlint-cli
+- Current repository checks: pytest, Ruff, Pyright, mdformat, and
+  PyMarkdown
 - Postgres + pgvector as the target persistence architecture
 - Hermes Agent as the intended runtime shell
 - MCP-first integration with an optional thin Hermes plugin later
@@ -63,12 +62,59 @@ Agreed initial stack:
 Current project state:
 
 - Foundation and specification phase
-- Initial TypeScript application scaffold is in place
-- Initial architectural boundaries are encoded in a tested module
+- Initial Python package skeleton is now in place under `src/verabrain`
+- Initial architectural boundaries are encoded in a tested Python
+  module
 - Memory layer foundation is now specified in OpenSpec
+- The memory-layer foundation change has been reconciled against the
+  archived foundation and retrieval baselines; the remaining gap is the
+  explicit memory write pipeline
+- The memory write path now has an explicit classification boundary for
+  `memory_candidate` versus `ignore`
+- Repository and persistence ports are now specified for memory,
+  knowledge, and execution
+- Initial in-memory persistence adapters now implement the repository
+  ports and unit-of-work boundary
+- Persistence, retrieval-policy, and tool-model ADRs are now accepted
+- Postgres + pgvector persistence adapter boundaries are now specified
+- Initial Postgres-backed repository and unit-of-work adapters now
+  exist in the infrastructure layer
+- Initial schema and migration support now exist for the Postgres
+  persistence path
+- A dedicated runtime settings surface and Postgres connection factory
+  now exist for the operational wiring path
+- Runtime bootstrap helpers now support explicit Postgres migration
+  apply, verify, and skip modes with schema verification checks
+- A dedicated Postgres application factory now wires runtime settings
+  into the Postgres unit of work and VeraBrain application assembly
+- The wired Postgres runtime path now has startup and operational tests
+  covering bootstrap sequencing, explicit schema failure, and soft
+  startup fallback behavior
+- The completed Postgres runtime and operational wiring OpenSpec change
+  is now ready to be treated as archived baseline work
+- The completed foundation and hybrid retrieval OpenSpec changes are now
+  ready to be treated as archived baseline work
+- The first hybrid memory retrieval flow now exists in the Postgres
+  adapter with optional semantic input and lexical fallback
+- Retrieval scoring helpers now live in the VeraBrain core with unit
+  tests for ranking behavior
+- Context-bundle assembly now passes optional memory-query embeddings
+  into bounded memory retrieval when a provider is available
+- Hybrid retrieval now has explicit fallback behavior for environments
+  without semantic recall
+- Initial MCP tool schemas and request/response mappings are now
+  specified for the application contracts
+- The first callable application services now exist for memory,
+  knowledge, execution, and bounded context retrieval
+- The MCP adapter now dispatches tool calls into the callable
+  application services
+- An initial stdio-first MCP server definition and runtime entrypoint
+  now exist over the wired adapter surface
 - VeraBrain concept modeling is documented in `docs/domain/`
-- Stack direction has been realigned from the original TypeScript-first
-  standalone path to a Python-first Hermes-centered path
+- The temporary TypeScript/Node scaffold has been retired from the
+  repository
+- Core-and-adapters architecture is now specified for the
+  Hermes-centered path
 
 ## Documentation Policy
 
@@ -82,6 +128,8 @@ Current project state:
 - Do not break public API contracts without a versioned change.
 - Every relevant change must leave evidence in Git
   (spec, task, and commit).
+- A successful slice is only complete after its commit is pushed from
+  the current branch.
 - Keep explicit boundaries between runtime, memory, tools, and
   knowledge.
 - Prefer controlled wrappers over unrestricted shell access.
@@ -99,9 +147,7 @@ Current project state:
 
 ## Likely Next Slices
 
-- Design the VeraBrain core and adapter boundaries
-- Define the initial Python project skeleton for the Hermes-centered
-  implementation path
-- Add ADRs for boundaries, persistence, and the tool model
+- Implement memory deduplication and update behavior in the reconciled
+  `memory-layer-foundation` change
 
 <!-- generated-by: project-context-maintainer -->

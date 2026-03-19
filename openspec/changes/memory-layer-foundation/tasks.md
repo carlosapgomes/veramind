@@ -8,10 +8,17 @@
 
 ## 2. Next implementation slices
 
-- [ ] Create the initial storage schema and repository contract for
+- [x] Create the initial storage schema and repository contract for
   `memories`
-- [ ] Implement the memory write pipeline with classification,
-  deduplication, and upsert behavior
-- [ ] Implement the memory retrieval contract with hybrid search inputs
+- [x] Implement the memory retrieval contract with hybrid search inputs
   and bounded prompt injection
-- [ ] Add unit tests for memory-layer behavior and contract boundaries
+- [x] Add unit tests for the implemented memory-layer contracts and
+  retrieval behavior
+- [x] Implement the explicit memory write pipeline classification
+  boundary (`memory_candidate` vs `ignore`)
+- [ ] Implement memory deduplication and update behavior through
+  `find_similar` before write-side upsert
+- [ ] Enforce the initial allowed `type` and `scope` values in the
+  memory write path
+- [ ] Add unit tests for memory write-pipeline classification,
+  deduplication, and allowed-value enforcement

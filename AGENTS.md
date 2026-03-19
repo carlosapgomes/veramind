@@ -4,11 +4,11 @@
 
 - Primary implementation direction: Python 3.11+
 - Python environment and package management: `uv`
-- Existing repository scaffold: TypeScript on Node.js 22 LTS
-- Existing TypeScript package manager: npm
-- Current repository tests: Vitest
-- Current repository quality tooling: ESLint, Prettier, and
-  markdownlint-cli
+- Repository implementation scaffold: Python package under
+  `src/verabrain`
+- Current repository tests: pytest
+- Current repository quality tooling: Ruff, Pyright, mdformat, and
+  PyMarkdown
 - Target persistence architecture: Postgres + pgvector
 - Intended runtime context: Hermes Agent with MCP-first integration
 
@@ -16,12 +16,9 @@
 
 - Required basic check: `git status --short`
 - Documentation and markdown: `bash scripts/markdown-lint.sh`
-- Unit tests: `npm run test`
-- Code lint: `npm run lint`
-- Type-check: `npm run typecheck`
-- After Python scaffold exists: `uv run pytest`
-- After Python scaffold exists: `uv run ruff check .`
-- After Python scaffold exists: `uv run pyright`
+- Python unit tests: `uv run pytest`
+- Python lint: `uv run ruff check .`
+- Python type-check: `uv run pyright`
 
 ## 3. Essential Commands (Local Operation)
 
@@ -33,19 +30,11 @@ git branch --show-current
 bash scripts/markdown-lint.sh
 ```
 
-### Existing TypeScript scaffold
-
-```bash
-npm install
-npm run test
-npm run lint
-npm run typecheck
-```
-
-### Future Python operation (after scaffold)
+### Python operation
 
 ```bash
 uv sync
+bash scripts/markdown-lint.sh
 uv run pytest
 uv run ruff check .
 uv run pyright
@@ -92,6 +81,8 @@ uv run pyright
 - Implement one task slice at a time.
 - Run the validation commands from section 2.
 - Update tasks, specs, and bilingual document mirrors.
+- Commit the completed slice with a clear and traceable message.
+- Push the current branch after the slice passes validation.
 - Stop and ask for confirmation before starting the next slice.
 
 ## 8. Definition of Done (DoD)
@@ -102,6 +93,7 @@ uv run pyright
 - [ ] Specs and docs are updated when needed
 - [ ] Bilingual document pairs remain synchronized
 - [ ] Commit message is clear and traceable
+- [ ] Current branch is pushed after the successful slice
 - [ ] Module boundaries remain preserved
 
 ## 9. Prohibited Anti-Patterns
@@ -121,8 +113,8 @@ Implement ONLY the next incomplete slice from tasks/spec.
 If a touched document is bilingual, update both language versions.
 Respect the Python-first Hermes-centered direction unless an ADR changes
 it again.
-Run section 2 validation commands, update artifacts, then STOP and ask
-for confirmation.
+Run section 2 validation commands, update artifacts, commit and push
+the successful slice, then STOP and ask for confirmation.
 ```
 
 <!-- generated-by: agents-md-generator -->

@@ -8,8 +8,8 @@ Proposed
 
 ### Requirement: Standardize the MVP stack
 
-The project MUST standardize the MVP application stack on TypeScript
-running on Node.js, using npm as the default package manager.
+The project MUST standardize the MVP application stack on Python 3.11+
+using `uv` as the default package and environment manager.
 
 #### Scenario: Contributor checks the official stack
 
@@ -51,22 +51,23 @@ repository artifacts.
 - **THEN** an ADR and project context documents explain the selected
   stack and principles
 
-### Requirement: Provide a runnable TypeScript scaffold
+### Requirement: Provide a runnable Python scaffold
 
-The project MUST provide a minimal runnable scaffold in TypeScript with
-working test, lint and type-check commands.
+The project MUST provide a minimal runnable scaffold in Python with
+working test, lint, type-check, and markdown validation commands.
 
 #### Scenario: Contributor validates the local scaffold
 
-- **WHEN** a contributor runs the documented TypeScript validation
+- **WHEN** a contributor runs the documented Python validation
   commands
-- **THEN** the repository provides `npm run test`, `npm run lint` and
-  `npm run typecheck` successfully
+- **THEN** the repository provides `bash scripts/markdown-lint.sh`,
+  `uv run pytest`, `uv run ruff check .`, and `uv run pyright`
+  successfully
 
 ### Requirement: Encode the initial module dependency rules
 
 The project MUST codify the initial architectural dependency direction
-between the core system modules in a tested TypeScript module.
+between the core system modules in a tested Python module.
 
 #### Scenario: Contributor checks dependency direction
 
