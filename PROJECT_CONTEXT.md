@@ -120,6 +120,8 @@ Current project state:
   repository
 - Core-and-adapters architecture is now specified for the
   Hermes-centered path
+- A dedicated OpenSpec change now defines the next memory-embedding
+  write-path slice
 
 ## Documentation Policy
 
@@ -152,6 +154,7 @@ Current project state:
 
 ## Likely Next Slices
 
-- Open the next implementation change on top of the archived baseline
+- Implement the memory-embedding write-path change on top of the
+  archived baseline
 
 <!-- generated-by: project-context-maintainer -->
