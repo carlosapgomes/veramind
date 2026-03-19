@@ -124,6 +124,8 @@ Current project state:
   write-path slice
 - The memory write path now has an explicit adapter-neutral embedding
   provider boundary for memory capture
+- The memory write path now attaches generated embeddings during
+  capture when a provider is available
 
 ## Documentation Policy
 

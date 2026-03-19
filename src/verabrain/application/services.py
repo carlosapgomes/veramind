@@ -72,7 +72,13 @@ class MemoryApplicationService:
         self._validate_request(request)
         now = self.clock()
         duplicate = self._assess_duplicate(request)
-        record = self._build_memory_record(request, now=now, duplicate=duplicate)
+        embedding = self._generate_embedding(request)
+        record = self._build_memory_record(
+            request,
+            now=now,
+            duplicate=duplicate,
+            embedding=embedding,
+        )
         try:
             saved = self.unit_of_work.memories.upsert(record)
             self.unit_of_work.commit()
@@ -104,6 +110,7 @@ class MemoryApplicationService:
         *,
         now: datetime,
         duplicate: MemoryDuplicateAssessment,
+        embedding: tuple[float, ...] | None,
     ) -> MemoryRecord:
         matched = duplicate.matched_record
         if matched is None:
@@ -117,6 +124,7 @@ class MemoryApplicationService:
                 updated_at=now,
                 last_used_at=None,
                 source=request.source,
+                embedding=embedding,
                 metadata=dict(request.metadata),
             )
         return MemoryRecord(
@@ -129,9 +137,16 @@ class MemoryApplicationService:
             updated_at=now,
             last_used_at=matched.last_used_at,
             source=request.source,
-            embedding=matched.embedding,
+            embedding=embedding if embedding is not None else matched.embedding,
             metadata={**dict(matched.metadata), **dict(request.metadata)},
         )
+
+    def _generate_embedding(
+        self, request: SaveMemoryRequest
+    ) -> tuple[float, ...] | None:
+        if self.memory_embedding_provider is None:
+            return None
+        return self.memory_embedding_provider.embed_memory_text(request.text)
 
 
 @dataclass(slots=True)

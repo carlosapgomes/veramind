@@ -188,7 +188,11 @@ class FailingUnitOfWork(RecordingUnitOfWork):
 
 
 class StubMemoryEmbeddingProvider(MemoryEmbeddingProvider):
+    def __init__(self) -> None:
+        self.seen_texts: list[str] = []
+
     def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
+        self.seen_texts.append(text)
         return (0.1, 0.2, 0.3)
 
 
@@ -269,6 +273,72 @@ def test_memory_service_accepts_memory_capture_embedding_provider() -> None:
     )
 
     assert service.memory_embedding_provider is provider
+
+
+def test_memory_service_attaches_embedding_when_provider_is_available() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    provider = StubMemoryEmbeddingProvider()
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-embedded",
+        memory_embedding_provider=provider,
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="User prefers concise answers.",
+            type="preference",
+            scope="long",
+            source="manual",
+        )
+    )
+
+    assert saved.id == "mem-embedded"
+    assert saved.embedding == (0.1, 0.2, 0.3)
+    assert memory_repository.saved == saved
+    assert provider.seen_texts == ["User prefers concise answers."]
+
+
+def test_memory_service_replaces_embedding_when_duplicate_update_gets_new_one() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    memory_repository.similar_result = (
+        MemoryRecord(
+            id="mem-existing",
+            text="User prefers concise answers.",
+            type="preference",
+            scope="long",
+            salience=0.9,
+            created_at=datetime(2026, 3, 18, 12, 0, tzinfo=UTC),
+            updated_at=datetime(2026, 3, 18, 12, 0, tzinfo=UTC),
+            last_used_at=datetime(2026, 3, 18, 15, 0, tzinfo=UTC),
+            source="manual",
+            embedding=(9.0, 9.0),
+            metadata={"origin": "existing"},
+        ),
+    )
+    provider = StubMemoryEmbeddingProvider()
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-new",
+        memory_embedding_provider=provider,
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="User prefers concise answers!",
+            type="preference",
+            scope="long",
+            source="import",
+        )
+    )
+
+    assert saved.id == "mem-existing"
+    assert saved.embedding == (0.1, 0.2, 0.3)
+    assert provider.seen_texts == ["User prefers concise answers!"]
 
 
 def test_memory_service_updates_existing_memory_when_duplicate_is_materially_the_same() -> None:
