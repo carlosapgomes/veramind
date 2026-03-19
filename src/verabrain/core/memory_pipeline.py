@@ -4,12 +4,32 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from string import punctuation
-from typing import TYPE_CHECKING, Literal, Sequence
+from typing import TYPE_CHECKING, Final, Literal, Sequence
 
 if TYPE_CHECKING:
     from verabrain.application.ports import MemoryRecord
 
 MemoryWriteDisposition = Literal["memory_candidate", "ignore"]
+AllowedMemoryType = Literal[
+    "preference",
+    "decision",
+    "project",
+    "habit",
+    "followup",
+    "profile",
+]
+AllowedMemoryScope = Literal["short", "medium", "long"]
+ALLOWED_MEMORY_TYPES: Final[frozenset[str]] = frozenset(
+    {
+        "preference",
+        "decision",
+        "project",
+        "habit",
+        "followup",
+        "profile",
+    }
+)
+ALLOWED_MEMORY_SCOPES: Final[frozenset[str]] = frozenset({"short", "medium", "long"})
 
 _TRANSIENT_MESSAGES = frozenset(
     {
@@ -64,6 +84,10 @@ class MemoryDuplicateAssessment:
     score: float
 
 
+class MemoryRecordValidationError(ValueError):
+    """Raised when a memory write request violates the allowed record shape."""
+
+
 def classify_memory_write(text: str) -> MemoryWriteClassification:
     """Classify whether input belongs in the durable memory write path."""
 
@@ -110,6 +134,21 @@ def classify_memory_write(text: str) -> MemoryWriteClassification:
         reason="no_durable_signal",
         normalized_text=normalized,
     )
+
+
+def validate_memory_record_shape(memory_type: str, scope: str) -> None:
+    """Validate the normative memory type and scope values."""
+
+    if memory_type not in ALLOWED_MEMORY_TYPES:
+        allowed = ", ".join(sorted(ALLOWED_MEMORY_TYPES))
+        raise MemoryRecordValidationError(
+            f"Memory type must be one of: {allowed}."
+        )
+    if scope not in ALLOWED_MEMORY_SCOPES:
+        allowed = ", ".join(sorted(ALLOWED_MEMORY_SCOPES))
+        raise MemoryRecordValidationError(
+            f"Memory scope must be one of: {allowed}."
+        )
 
 
 def assess_memory_duplicate(

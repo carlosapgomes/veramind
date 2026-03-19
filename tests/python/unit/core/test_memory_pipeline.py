@@ -2,10 +2,13 @@ from datetime import UTC, datetime
 
 from verabrain.application import MemoryRecord
 from verabrain.core import (
+    MemoryRecordValidationError,
     assess_memory_duplicate,
     classify_memory_write,
     memory_duplicate_score,
+    validate_memory_record_shape,
 )
+import pytest
 
 
 def test_memory_write_classification_ignores_empty_input() -> None:
@@ -95,3 +98,23 @@ def test_memory_duplicate_assessment_rejects_weak_matches() -> None:
 
     assert result.matched_record is None
     assert result.score == 0.0
+
+
+def test_memory_record_shape_validation_accepts_allowed_values() -> None:
+    validate_memory_record_shape("preference", "long")
+
+
+def test_memory_record_shape_validation_rejects_unknown_type() -> None:
+    with pytest.raises(
+        MemoryRecordValidationError,
+        match="Memory type must be one of",
+    ):
+        validate_memory_record_shape("note", "long")
+
+
+def test_memory_record_shape_validation_rejects_unknown_scope() -> None:
+    with pytest.raises(
+        MemoryRecordValidationError,
+        match="Memory scope must be one of",
+    ):
+        validate_memory_record_shape("preference", "forever")

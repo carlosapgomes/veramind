@@ -18,7 +18,7 @@
   boundary (`memory_candidate` vs `ignore`)
 - [x] Implement memory deduplication and update behavior through
   `find_similar` before write-side upsert
-- [ ] Enforce the initial allowed `type` and `scope` values in the
+- [x] Enforce the initial allowed `type` and `scope` values in the
   memory write path
-- [ ] Add unit tests for memory write-pipeline classification,
+- [x] Add unit tests for memory write-pipeline classification,
   deduplication, and allowed-value enforcement

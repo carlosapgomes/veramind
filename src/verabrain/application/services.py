@@ -24,6 +24,7 @@ from verabrain.core.memory_pipeline import (
     MemoryWriteClassification,
     assess_memory_duplicate,
     classify_memory_write,
+    validate_memory_record_shape,
 )
 from verabrain.core.retrieval import (
     resolve_query_embedding,
@@ -66,6 +67,7 @@ class MemoryApplicationService:
         return classify_memory_write(request.text)
 
     def save(self, request: SaveMemoryRequest) -> MemoryRecord:
+        self._validate_request(request)
         now = self.clock()
         duplicate = self._assess_duplicate(request)
         record = self._build_memory_record(request, now=now, duplicate=duplicate)
@@ -86,6 +88,9 @@ class MemoryApplicationService:
                 query_embedding=request.query_embedding,
             )
         )
+
+    def _validate_request(self, request: SaveMemoryRequest) -> None:
+        validate_memory_record_shape(request.type, request.scope)
 
     def _assess_duplicate(self, request: SaveMemoryRequest) -> MemoryDuplicateAssessment:
         candidates = self.unit_of_work.memories.find_similar(text=request.text, limit=5)

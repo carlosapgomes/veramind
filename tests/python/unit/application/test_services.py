@@ -29,6 +29,7 @@ from verabrain.application import (
     SearchMemoryRequest,
     VeraBrainApplication,
 )
+from verabrain.core import MemoryRecordValidationError
 
 
 def _now() -> datetime:
@@ -331,6 +332,48 @@ def test_memory_service_creates_new_memory_when_similar_candidates_are_not_mater
     assert saved.created_at == _now()
     assert memory_repository.saved == saved
     assert unit_of_work.commits == 1
+
+
+def test_memory_service_rejects_unknown_memory_type_before_writing() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    service = MemoryApplicationService(unit_of_work=unit_of_work, clock=_now)
+
+    with pytest.raises(MemoryRecordValidationError, match="Memory type must be one of"):
+        service.save(
+            SaveMemoryRequest(
+                text="User prefers concise answers.",
+                type="note",
+                scope="long",
+                source="manual",
+            )
+        )
+
+    assert memory_repository.last_find_similar_text is None
+    assert memory_repository.saved is None
+    assert unit_of_work.commits == 0
+    assert unit_of_work.rollbacks == 0
+
+
+def test_memory_service_rejects_unknown_memory_scope_before_writing() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    service = MemoryApplicationService(unit_of_work=unit_of_work, clock=_now)
+
+    with pytest.raises(MemoryRecordValidationError, match="Memory scope must be one of"):
+        service.save(
+            SaveMemoryRequest(
+                text="User prefers concise answers.",
+                type="preference",
+                scope="forever",
+                source="manual",
+            )
+        )
+
+    assert memory_repository.last_find_similar_text is None
+    assert memory_repository.saved is None
+    assert unit_of_work.commits == 0
+    assert unit_of_work.rollbacks == 0
 
 
 def test_memory_service_rolls_back_when_write_fails() -> None:

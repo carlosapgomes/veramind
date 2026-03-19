@@ -73,6 +73,8 @@ Current project state:
   `memory_candidate` versus `ignore`
 - The memory write path now deduplicates through `find_similar` and
   updates materially matching memory records before write-side upsert
+- The memory write path now enforces the normative allowed values for
+  memory `type` and `scope`
 - Repository and persistence ports are now specified for memory,
   knowledge, and execution
 - Initial in-memory persistence adapters now implement the repository
@@ -149,7 +151,6 @@ Current project state:
 
 ## Likely Next Slices
 
-- Enforce the initial allowed `type` and `scope` values in the memory
-  write path
+- Archive or close the completed `memory-layer-foundation` change
 
 <!-- generated-by: project-context-maintainer -->
