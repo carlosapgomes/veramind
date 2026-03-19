@@ -11,7 +11,7 @@
 - [x] Define an explicit embedding provider boundary for memory capture
 - [x] Attach generated embeddings during the memory write flow when a
   provider is available
-- [ ] Define fallback behavior when embedding generation is unavailable
+- [x] Define fallback behavior when embedding generation is unavailable
   or fails
 - [ ] Preserve or replace embeddings explicitly when deduplicated memory
   updates occur

@@ -8,6 +8,8 @@ import pytest
 from verabrain.application import (
     CaptureKnowledgeRequest,
     ContextBundleRequest,
+    EMBEDDING_ERROR_METADATA_KEY,
+    EMBEDDING_STATUS_METADATA_KEY,
     ExecutionApplicationService,
     ExecutionQuery,
     ExecutionRecord,
@@ -196,6 +198,24 @@ class StubMemoryEmbeddingProvider(MemoryEmbeddingProvider):
         return (0.1, 0.2, 0.3)
 
 
+class NoneMemoryEmbeddingProvider(MemoryEmbeddingProvider):
+    def __init__(self) -> None:
+        self.seen_texts: list[str] = []
+
+    def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
+        self.seen_texts.append(text)
+        return None
+
+
+class FailingMemoryEmbeddingProvider(MemoryEmbeddingProvider):
+    def __init__(self) -> None:
+        self.seen_texts: list[str] = []
+
+    def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
+        self.seen_texts.append(text)
+        raise RuntimeError("embedding backend unavailable")
+
+
 def test_memory_service_saves_records_and_commits() -> None:
     unit_of_work = RecordingUnitOfWork()
     memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
@@ -217,6 +237,7 @@ def test_memory_service_saves_records_and_commits() -> None:
 
     assert record.id == "mem-1"
     assert record.created_at == _now()
+    assert record.metadata == {EMBEDDING_STATUS_METADATA_KEY: "unavailable"}
     assert memory_repository.last_find_similar_text == "User prefers concise answers."
     assert memory_repository.last_find_similar_limit == 5
     assert unit_of_work.commits == 1
@@ -297,6 +318,7 @@ def test_memory_service_attaches_embedding_when_provider_is_available() -> None:
 
     assert saved.id == "mem-embedded"
     assert saved.embedding == (0.1, 0.2, 0.3)
+    assert saved.metadata == {EMBEDDING_STATUS_METADATA_KEY: "generated"}
     assert memory_repository.saved == saved
     assert provider.seen_texts == ["User prefers concise answers."]
 
@@ -338,6 +360,10 @@ def test_memory_service_replaces_embedding_when_duplicate_update_gets_new_one() 
 
     assert saved.id == "mem-existing"
     assert saved.embedding == (0.1, 0.2, 0.3)
+    assert saved.metadata == {
+        "origin": "existing",
+        EMBEDDING_STATUS_METADATA_KEY: "generated",
+    }
     assert provider.seen_texts == ["User prefers concise answers!"]
 
 
@@ -380,9 +406,66 @@ def test_memory_service_updates_existing_memory_when_duplicate_is_materially_the
     assert saved.last_used_at == existing.last_used_at
     assert saved.embedding == (0.1, 0.2)
     assert saved.salience == 0.9
-    assert saved.metadata == {"origin": "updated", "keep": True}
+    assert saved.metadata == {
+        "origin": "updated",
+        "keep": True,
+        EMBEDDING_STATUS_METADATA_KEY: "unavailable",
+    }
     assert memory_repository.saved == saved
     assert unit_of_work.commits == 1
+
+
+def test_memory_service_persists_without_embedding_when_provider_returns_none() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    provider = NoneMemoryEmbeddingProvider()
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-none",
+        memory_embedding_provider=provider,
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="User prefers concise answers.",
+            type="preference",
+            scope="long",
+            source="manual",
+        )
+    )
+
+    assert saved.id == "mem-none"
+    assert saved.embedding is None
+    assert saved.metadata == {EMBEDDING_STATUS_METADATA_KEY: "unavailable"}
+    assert provider.seen_texts == ["User prefers concise answers."]
+
+
+def test_memory_service_persists_with_failed_embedding_status_when_provider_raises() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    provider = FailingMemoryEmbeddingProvider()
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-failed",
+        memory_embedding_provider=provider,
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="User prefers concise answers.",
+            type="preference",
+            scope="long",
+            source="manual",
+        )
+    )
+
+    assert saved.id == "mem-failed"
+    assert saved.embedding is None
+    assert saved.metadata == {
+        EMBEDDING_STATUS_METADATA_KEY: "failed",
+        EMBEDDING_ERROR_METADATA_KEY: "RuntimeError",
+    }
+    assert provider.seen_texts == ["User prefers concise answers."]
 
 
 def test_memory_service_creates_new_memory_when_similar_candidates_are_not_material_duplicates() -> None:

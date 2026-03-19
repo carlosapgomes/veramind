@@ -126,6 +126,8 @@ Current project state:
   provider boundary for memory capture
 - The memory write path now attaches generated embeddings during
   capture when a provider is available
+- The memory write path now persists explicit embedding fallback status
+  when capture is unavailable or fails
 
 ## Documentation Policy
 

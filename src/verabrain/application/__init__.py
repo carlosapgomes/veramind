@@ -1,6 +1,11 @@
 """Application layer for VeraBrain contracts and orchestration."""
 
-from .embeddings import MemoryEmbeddingProvider
+from .embeddings import (
+    EMBEDDING_ERROR_METADATA_KEY,
+    EMBEDDING_STATUS_METADATA_KEY,
+    MemoryEmbeddingCaptureResult,
+    MemoryEmbeddingProvider,
+)
 from .contracts import (
     CaptureKnowledgeRequest,
     ContextBundle,
@@ -49,6 +54,9 @@ __all__ = [
     "KnowledgeRecord",
     "KnowledgeRepository",
     "KnowledgeSearchQuery",
+    "MemoryEmbeddingCaptureResult",
+    "EMBEDDING_ERROR_METADATA_KEY",
+    "EMBEDDING_STATUS_METADATA_KEY",
     "MemoryEmbeddingProvider",
     "MemoryApplicationService",
     "QueryEmbeddingProvider",

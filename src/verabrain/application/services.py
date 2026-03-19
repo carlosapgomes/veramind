@@ -4,10 +4,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import Callable, Sequence
+from typing import Callable, Mapping, Sequence
 from uuid import uuid4
 
-from .embeddings import MemoryEmbeddingProvider
+from .embeddings import (
+    EMBEDDING_ERROR_METADATA_KEY,
+    EMBEDDING_STATUS_METADATA_KEY,
+    MemoryEmbeddingCaptureResult,
+    MemoryEmbeddingProvider,
+    resolve_memory_embedding,
+)
 from .contracts import (
     CaptureKnowledgeRequest,
     ContextBundle,
@@ -72,12 +78,12 @@ class MemoryApplicationService:
         self._validate_request(request)
         now = self.clock()
         duplicate = self._assess_duplicate(request)
-        embedding = self._generate_embedding(request)
+        embedding_capture = self._capture_embedding(request)
         record = self._build_memory_record(
             request,
             now=now,
             duplicate=duplicate,
-            embedding=embedding,
+            embedding_capture=embedding_capture,
         )
         try:
             saved = self.unit_of_work.memories.upsert(record)
@@ -110,7 +116,7 @@ class MemoryApplicationService:
         *,
         now: datetime,
         duplicate: MemoryDuplicateAssessment,
-        embedding: tuple[float, ...] | None,
+        embedding_capture: MemoryEmbeddingCaptureResult,
     ) -> MemoryRecord:
         matched = duplicate.matched_record
         if matched is None:
@@ -124,8 +130,12 @@ class MemoryApplicationService:
                 updated_at=now,
                 last_used_at=None,
                 source=request.source,
-                embedding=embedding,
-                metadata=dict(request.metadata),
+                embedding=embedding_capture.embedding,
+                metadata=self._build_metadata(
+                    base_metadata={},
+                    request_metadata=request.metadata,
+                    embedding_capture=embedding_capture,
+                ),
             )
         return MemoryRecord(
             id=matched.id,
@@ -137,16 +147,48 @@ class MemoryApplicationService:
             updated_at=now,
             last_used_at=matched.last_used_at,
             source=request.source,
-            embedding=embedding if embedding is not None else matched.embedding,
-            metadata={**dict(matched.metadata), **dict(request.metadata)},
+            embedding=(
+                embedding_capture.embedding
+                if embedding_capture.embedding is not None
+                else matched.embedding
+            ),
+            metadata=self._build_metadata(
+                base_metadata=matched.metadata,
+                request_metadata=request.metadata,
+                embedding_capture=embedding_capture,
+            ),
         )
 
-    def _generate_embedding(
+    def _capture_embedding(
         self, request: SaveMemoryRequest
-    ) -> tuple[float, ...] | None:
-        if self.memory_embedding_provider is None:
-            return None
-        return self.memory_embedding_provider.embed_memory_text(request.text)
+    ) -> MemoryEmbeddingCaptureResult:
+        return resolve_memory_embedding(request.text, self.memory_embedding_provider)
+
+    def _build_metadata(
+        self,
+        *,
+        base_metadata: Mapping[str, object],
+        request_metadata: Mapping[str, object],
+        embedding_capture: MemoryEmbeddingCaptureResult,
+    ) -> dict[str, object]:
+        metadata: dict[str, object] = {}
+        for source in (base_metadata, request_metadata):
+            metadata.update(self._without_embedding_runtime_metadata(source))
+        metadata.update(embedding_capture.metadata())
+        return metadata
+
+    def _without_embedding_runtime_metadata(
+        self, metadata: Mapping[str, object]
+    ) -> dict[str, object]:
+        return {
+            str(key): value
+            for key, value in dict(metadata).items()
+            if key
+            not in {
+                EMBEDDING_STATUS_METADATA_KEY,
+                EMBEDDING_ERROR_METADATA_KEY,
+            }
+        }
 
 
 @dataclass(slots=True)
