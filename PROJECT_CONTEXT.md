@@ -66,9 +66,8 @@ Current project state:
 - Initial architectural boundaries are encoded in a tested Python
   module
 - Memory layer foundation is now specified in OpenSpec
-- The memory-layer foundation change has been reconciled against the
-  archived foundation and retrieval baselines; the remaining gap is the
-  explicit memory write pipeline
+- The memory-layer foundation change has now been reconciled and is
+  ready to be treated as archived baseline work
 - The memory write path now has an explicit classification boundary for
   `memory_candidate` versus `ignore`
 - The memory write path now deduplicates through `find_similar` and
@@ -151,6 +150,7 @@ Current project state:
 
 ## Likely Next Slices
 
-- Archive or close the completed `memory-layer-foundation` change
+- Reconcile or retire the remaining legacy active changes before
+  opening the next implementation change
 
 <!-- generated-by: project-context-maintainer -->
