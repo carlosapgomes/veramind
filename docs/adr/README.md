@@ -13,3 +13,4 @@ This directory stores important architecture decisions.
 ## Index
 
 - `ADR-0001`: Initial stack and engineering principles
+- `ADR-0002`: Position VeraBrain as a Hermes extension

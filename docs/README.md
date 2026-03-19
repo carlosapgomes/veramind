@@ -7,6 +7,7 @@ other durable project documents.
 
 ## Structure
 
+- `docs/domain/`: Conceptual and domain-model documents
 - `docs/adr/`: Architecture Decision Records
 - `docs/releases/`: Release evidence and release-oriented notes
 

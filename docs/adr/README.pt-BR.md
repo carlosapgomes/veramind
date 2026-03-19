@@ -13,3 +13,4 @@ Este diretório armazena decisões arquiteturais importantes.
 ## Índice
 
 - `ADR-0001`: Stack inicial e princípios de engenharia
+- `ADR-0002`: Posicionar o VeraBrain como extensão do Hermes

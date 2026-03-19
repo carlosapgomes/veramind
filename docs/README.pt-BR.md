@@ -7,6 +7,7 @@ outros documentos duráveis do projeto.
 
 ## Estrutura
 
+- `docs/domain/`: Documentos conceituais e de modelo de domínio
 - `docs/adr/`: Architecture Decision Records
 - `docs/releases/`: Evidências de release e notas associadas
 

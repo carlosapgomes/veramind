@@ -62,6 +62,8 @@ Current project state:
 - Foundation and specification phase
 - Initial TypeScript application scaffold is in place
 - Initial architectural boundaries are encoded in a tested module
+- Memory layer foundation is now specified in OpenSpec
+- VeraBrain concept modeling is documented in `docs/domain/`
 
 ## Documentation Policy
 
@@ -92,7 +94,8 @@ Current project state:
 
 ## Likely Next Slices
 
-- Specify the memory layer foundation
+- Implement the memory layer foundation
+- Design the VeraBrain core and adapter boundaries
 - Add ADRs for boundaries, persistence, and the tool model
 
 <!-- generated-by: project-context-maintainer -->
