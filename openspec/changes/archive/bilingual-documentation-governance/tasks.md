@@ -23,4 +23,4 @@
 
 ## 4. Next expected slice
 
-- [ ] Specify and implement the memory layer foundation
+- [x] Specify and implement the memory layer foundation

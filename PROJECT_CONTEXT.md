@@ -66,6 +66,8 @@ Current project state:
 - Initial architectural boundaries are encoded in a tested Python
   module
 - Memory layer foundation is now specified in OpenSpec
+- The legacy foundation, stack-realignment, and bilingual-governance
+  changes are now ready to be treated as archived baseline work
 - The memory-layer foundation change has now been reconciled and is
   ready to be treated as archived baseline work
 - The memory write path now has an explicit classification boundary for
@@ -150,7 +152,6 @@ Current project state:
 
 ## Likely Next Slices
 
-- Reconcile or retire the remaining legacy active changes before
-  opening the next implementation change
+- Open the next implementation change on top of the archived baseline
 
 <!-- generated-by: project-context-maintainer -->
