@@ -71,6 +71,8 @@ Current project state:
   explicit memory write pipeline
 - The memory write path now has an explicit classification boundary for
   `memory_candidate` versus `ignore`
+- The memory write path now deduplicates through `find_similar` and
+  updates materially matching memory records before write-side upsert
 - Repository and persistence ports are now specified for memory,
   knowledge, and execution
 - Initial in-memory persistence adapters now implement the repository
@@ -147,7 +149,7 @@ Current project state:
 
 ## Likely Next Slices
 
-- Implement memory deduplication and update behavior in the reconciled
-  `memory-layer-foundation` change
+- Enforce the initial allowed `type` and `scope` values in the memory
+  write path
 
 <!-- generated-by: project-context-maintainer -->

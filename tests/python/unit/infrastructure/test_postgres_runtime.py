@@ -361,7 +361,9 @@ def test_runtime_application_factory_wires_postgres_backed_application() -> None
     assert len(connector.calls) == 1
     assert len(connector.connections) == 1
     assert connector.connections[0].commits == 1
-    assert "INSERT INTO memories" in connector.connections[0].executed[0][0]
+    assert any(
+        "INSERT INTO memories" in query for query, _ in connector.connections[0].executed
+    )
 
 
 def test_wired_runtime_path_uses_separate_startup_and_application_connections() -> None:
@@ -405,7 +407,7 @@ def test_wired_runtime_path_uses_separate_startup_and_application_connections() 
     assert startup_connection.commits == 0
     assert application_connection.commits == 1
     assert "SELECT EXISTS (" in startup_connection.executed[0][0]
-    assert "INSERT INTO memories" in application_connection.executed[0][0]
+    assert any("INSERT INTO memories" in query for query, _ in application_connection.executed)
 
 
 def test_wired_runtime_path_reports_schema_failures_before_application_assembly() -> None:
@@ -470,4 +472,4 @@ def test_wired_runtime_path_can_soft_fail_startup_before_later_application_use()
     assert saved.id == "mem-1"
     assert len(connector.calls) == 2
     assert application_connection.commits == 1
-    assert "INSERT INTO memories" in application_connection.executed[0][0]
+    assert any("INSERT INTO memories" in query for query, _ in application_connection.executed)

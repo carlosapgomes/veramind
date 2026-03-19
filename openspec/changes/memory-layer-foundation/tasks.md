@@ -16,7 +16,7 @@
   retrieval behavior
 - [x] Implement the explicit memory write pipeline classification
   boundary (`memory_candidate` vs `ignore`)
-- [ ] Implement memory deduplication and update behavior through
+- [x] Implement memory deduplication and update behavior through
   `find_similar` before write-side upsert
 - [ ] Enforce the initial allowed `type` and `scope` values in the
   memory write path

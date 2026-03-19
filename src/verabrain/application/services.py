@@ -20,7 +20,9 @@ from .contracts import (
     SearchMemoryRequest,
 )
 from verabrain.core.memory_pipeline import (
+    MemoryDuplicateAssessment,
     MemoryWriteClassification,
+    assess_memory_duplicate,
     classify_memory_write,
 )
 from verabrain.core.retrieval import (
@@ -65,18 +67,8 @@ class MemoryApplicationService:
 
     def save(self, request: SaveMemoryRequest) -> MemoryRecord:
         now = self.clock()
-        record = MemoryRecord(
-            id=self.id_generator(),
-            text=request.text,
-            type=request.type,
-            scope=request.scope,
-            salience=request.salience if request.salience is not None else 0.5,
-            created_at=now,
-            updated_at=now,
-            last_used_at=None,
-            source=request.source,
-            metadata=dict(request.metadata),
-        )
+        duplicate = self._assess_duplicate(request)
+        record = self._build_memory_record(request, now=now, duplicate=duplicate)
         try:
             saved = self.unit_of_work.memories.upsert(record)
             self.unit_of_work.commit()
@@ -93,6 +85,45 @@ class MemoryApplicationService:
                 min_salience=request.min_salience,
                 query_embedding=request.query_embedding,
             )
+        )
+
+    def _assess_duplicate(self, request: SaveMemoryRequest) -> MemoryDuplicateAssessment:
+        candidates = self.unit_of_work.memories.find_similar(text=request.text, limit=5)
+        return assess_memory_duplicate(request.text, candidates)
+
+    def _build_memory_record(
+        self,
+        request: SaveMemoryRequest,
+        *,
+        now: datetime,
+        duplicate: MemoryDuplicateAssessment,
+    ) -> MemoryRecord:
+        matched = duplicate.matched_record
+        if matched is None:
+            return MemoryRecord(
+                id=self.id_generator(),
+                text=request.text,
+                type=request.type,
+                scope=request.scope,
+                salience=request.salience if request.salience is not None else 0.5,
+                created_at=now,
+                updated_at=now,
+                last_used_at=None,
+                source=request.source,
+                metadata=dict(request.metadata),
+            )
+        return MemoryRecord(
+            id=matched.id,
+            text=request.text,
+            type=request.type,
+            scope=request.scope,
+            salience=matched.salience if request.salience is None else request.salience,
+            created_at=matched.created_at,
+            updated_at=now,
+            last_used_at=matched.last_used_at,
+            source=request.source,
+            embedding=matched.embedding,
+            metadata={**dict(matched.metadata), **dict(request.metadata)},
         )
 
 

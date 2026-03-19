@@ -38,6 +38,8 @@ def _now() -> datetime:
 class RecordingMemoryRepository(MemoryRepository):
     def __init__(self) -> None:
         self.saved: MemoryRecord | None = None
+        self.last_find_similar_text: str | None = None
+        self.last_find_similar_limit: int | None = None
         self.last_search_query = None
         self.result = [
             MemoryRecord(
@@ -52,6 +54,7 @@ class RecordingMemoryRepository(MemoryRepository):
                 source="manual",
             )
         ]
+        self.similar_result: Sequence[MemoryRecord] = ()
 
     def get(self, record_id: str) -> MemoryRecord | None:
         return self.saved if self.saved and self.saved.id == record_id else None
@@ -61,7 +64,9 @@ class RecordingMemoryRepository(MemoryRepository):
         return record
 
     def find_similar(self, *, text: str, limit: int = 5) -> Sequence[MemoryRecord]:
-        return self.result[:limit]
+        self.last_find_similar_text = text
+        self.last_find_similar_limit = limit
+        return self.similar_result[:limit]
 
     def search(self, query):  # type: ignore[no-untyped-def]
         self.last_search_query = query
@@ -182,6 +187,7 @@ class FailingUnitOfWork(RecordingUnitOfWork):
 
 def test_memory_service_saves_records_and_commits() -> None:
     unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
     service = MemoryApplicationService(
         unit_of_work=unit_of_work,
         clock=_now,
@@ -200,6 +206,8 @@ def test_memory_service_saves_records_and_commits() -> None:
 
     assert record.id == "mem-1"
     assert record.created_at == _now()
+    assert memory_repository.last_find_similar_text == "User prefers concise answers."
+    assert memory_repository.last_find_similar_limit == 5
     assert unit_of_work.commits == 1
     assert unit_of_work.rollbacks == 0
 
@@ -242,6 +250,87 @@ def test_memory_service_exposes_write_classification_for_ignored_inputs() -> Non
     assert memory_repository.saved is None
     assert unit_of_work.commits == 0
     assert unit_of_work.rollbacks == 0
+
+
+def test_memory_service_updates_existing_memory_when_duplicate_is_materially_the_same() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    existing = MemoryRecord(
+        id="mem-existing",
+        text="User prefers concise answers.",
+        type="preference",
+        scope="long",
+        salience=0.9,
+        created_at=datetime(2026, 3, 18, 12, 0, tzinfo=UTC),
+        updated_at=datetime(2026, 3, 18, 12, 0, tzinfo=UTC),
+        last_used_at=datetime(2026, 3, 18, 15, 0, tzinfo=UTC),
+        source="manual",
+        embedding=(0.1, 0.2),
+        metadata={"origin": "existing", "keep": True},
+    )
+    memory_repository.similar_result = (existing,)
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-new",
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="User prefers concise answers!",
+            type="preference",
+            scope="long",
+            source="import",
+            metadata={"origin": "updated"},
+        )
+    )
+
+    assert saved.id == "mem-existing"
+    assert saved.created_at == existing.created_at
+    assert saved.updated_at == _now()
+    assert saved.last_used_at == existing.last_used_at
+    assert saved.embedding == (0.1, 0.2)
+    assert saved.salience == 0.9
+    assert saved.metadata == {"origin": "updated", "keep": True}
+    assert memory_repository.saved == saved
+    assert unit_of_work.commits == 1
+
+
+def test_memory_service_creates_new_memory_when_similar_candidates_are_not_material_duplicates() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    memory_repository.similar_result = (
+        MemoryRecord(
+            id="mem-existing",
+            text="User likes detailed weekend plans.",
+            type="habit",
+            scope="medium",
+            salience=0.4,
+            created_at=_now(),
+            updated_at=_now(),
+            last_used_at=None,
+            source="manual",
+        ),
+    )
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-2",
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="Project timeline depends on Hermes MCP delivery.",
+            type="project",
+            scope="medium",
+            source="manual",
+        )
+    )
+
+    assert saved.id == "mem-2"
+    assert saved.created_at == _now()
+    assert memory_repository.saved == saved
+    assert unit_of_work.commits == 1
 
 
 def test_memory_service_rolls_back_when_write_fails() -> None:

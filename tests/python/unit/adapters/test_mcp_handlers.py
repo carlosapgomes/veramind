@@ -25,6 +25,7 @@ def _now() -> datetime:
 class AdapterMemoryRepository(MemoryRepository):
     def __init__(self) -> None:
         self.saved: MemoryRecord | None = None
+        self.similar_result: Sequence[MemoryRecord] = ()
         self.result = [
             MemoryRecord(
                 id="mem-existing",
@@ -47,7 +48,7 @@ class AdapterMemoryRepository(MemoryRepository):
         return record
 
     def find_similar(self, *, text: str, limit: int = 5) -> Sequence[MemoryRecord]:
-        return self.result[:limit]
+        return self.similar_result[:limit]
 
     def search(self, query):  # type: ignore[no-untyped-def]
         return self.result[: query.limit]
