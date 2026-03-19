@@ -49,13 +49,16 @@ Desired dependency direction:
 
 Agreed initial stack:
 
-- TypeScript
-- Node.js 22 LTS
-- npm
-- Vitest
-- ESLint + Prettier + markdownlint-cli
+- Python 3.11+ as the primary implementation direction for
+  VeraBrain-on-Hermes
+- `uv` as the intended Python package and environment manager
+- TypeScript/Node.js as the existing repository scaffold, not the
+  primary product direction
+- Current repository checks: Vitest, ESLint, Prettier, and
+  markdownlint-cli
 - Postgres + pgvector as the target persistence architecture
-- pi-mono as the intended agent runtime
+- Hermes Agent as the intended runtime shell
+- MCP-first integration with an optional thin Hermes plugin later
 
 Current project state:
 
@@ -64,6 +67,8 @@ Current project state:
 - Initial architectural boundaries are encoded in a tested module
 - Memory layer foundation is now specified in OpenSpec
 - VeraBrain concept modeling is documented in `docs/domain/`
+- Stack direction has been realigned from the original TypeScript-first
+  standalone path to a Python-first Hermes-centered path
 
 ## Documentation Policy
 
@@ -94,8 +99,9 @@ Current project state:
 
 ## Likely Next Slices
 
-- Implement the memory layer foundation
 - Design the VeraBrain core and adapter boundaries
+- Define the initial Python project skeleton for the Hermes-centered
+  implementation path
 - Add ADRs for boundaries, persistence, and the tool model
 
 <!-- generated-by: project-context-maintainer -->

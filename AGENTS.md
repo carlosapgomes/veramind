@@ -2,13 +2,15 @@
 
 ## 1. Stack and Versions
 
-- MVP primary language: TypeScript
-- Runtime: Node.js 22 LTS
-- Package manager: npm
-- Testing: Vitest
-- Quality tooling: ESLint, Prettier, and markdownlint-cli
+- Primary implementation direction: Python 3.11+
+- Python environment and package management: `uv`
+- Existing repository scaffold: TypeScript on Node.js 22 LTS
+- Existing TypeScript package manager: npm
+- Current repository tests: Vitest
+- Current repository quality tooling: ESLint, Prettier, and
+  markdownlint-cli
 - Target persistence architecture: Postgres + pgvector
-- Intended agent runtime: pi-mono
+- Intended runtime context: Hermes Agent with MCP-first integration
 
 ## 2. Validation Commands (Quality Gate)
 
@@ -17,6 +19,9 @@
 - Unit tests: `npm run test`
 - Code lint: `npm run lint`
 - Type-check: `npm run typecheck`
+- After Python scaffold exists: `uv run pytest`
+- After Python scaffold exists: `uv run ruff check .`
+- After Python scaffold exists: `uv run pyright`
 
 ## 3. Essential Commands (Local Operation)
 
@@ -28,7 +33,7 @@ git branch --show-current
 bash scripts/markdown-lint.sh
 ```
 
-### TypeScript operation
+### Existing TypeScript scaffold
 
 ```bash
 npm install
@@ -37,13 +42,26 @@ npm run lint
 npm run typecheck
 ```
 
+### Future Python operation (after scaffold)
+
+```bash
+uv sync
+uv run pytest
+uv run ruff check .
+uv run pyright
+```
+
 ## 4. Architecture and Constraints
 
 - Define explicit module boundaries and keep dependencies unidirectional.
 - Separate the system into `agent runtime`, `memory layer`,
   `tool layer`, and `knowledge system`.
+- Treat Hermes Agent as the current runtime shell and VeraBrain as a
+  core-plus-adapters subsystem.
 - Allow the runtime to depend on memory, tool, and knowledge contracts;
   do not allow reverse dependencies.
+- Keep VeraBrain core logic independent from MCP and Hermes plugin
+  adapters.
 - Expose capabilities through controlled wrappers; avoid raw shell as a
   public interface.
 - Keep business rules out of presentation and CLI layers.
@@ -101,6 +119,8 @@ npm run typecheck
 Read AGENTS.md and PROJECT_CONTEXT.md first.
 Implement ONLY the next incomplete slice from tasks/spec.
 If a touched document is bilingual, update both language versions.
+Respect the Python-first Hermes-centered direction unless an ADR changes
+it again.
 Run section 2 validation commands, update artifacts, then STOP and ask
 for confirmation.
 ```

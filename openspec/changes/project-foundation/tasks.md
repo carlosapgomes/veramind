@@ -20,4 +20,5 @@
 ## 3. Next expected slice
 
 - [x] Specify the memory layer foundation
-- [ ] Implement the memory layer foundation
+- [x] Realign the stack direction for the Hermes-centered path
+- [ ] Design the VeraBrain core and adapter boundaries

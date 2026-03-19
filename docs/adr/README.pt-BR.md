@@ -14,3 +14,5 @@ Este diretório armazena decisões arquiteturais importantes.
 
 - `ADR-0001`: Stack inicial e princípios de engenharia
 - `ADR-0002`: Posicionar o VeraBrain como extensão do Hermes
+- `ADR-0003`: Revisar o stack de implementação para um VeraBrain
+  centrado no Hermes
