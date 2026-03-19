@@ -122,6 +122,8 @@ Current project state:
   Hermes-centered path
 - A dedicated OpenSpec change now defines the next memory-embedding
   write-path slice
+- The memory write path now has an explicit adapter-neutral embedding
+  provider boundary for memory capture
 
 ## Documentation Policy
 

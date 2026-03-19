@@ -8,7 +8,7 @@
 
 ## 2. Next implementation slices
 
-- [ ] Define an explicit embedding provider boundary for memory capture
+- [x] Define an explicit embedding provider boundary for memory capture
 - [ ] Attach generated embeddings during the memory write flow when a
   provider is available
 - [ ] Define fallback behavior when embedding generation is unavailable

@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from typing import Callable, Sequence
 from uuid import uuid4
 
+from .embeddings import MemoryEmbeddingProvider
 from .contracts import (
     CaptureKnowledgeRequest,
     ContextBundle,
@@ -60,6 +61,7 @@ class MemoryApplicationService:
     unit_of_work: PersistenceUnitOfWork
     clock: Clock = _utc_now
     id_generator: IdGenerator = _new_id
+    memory_embedding_provider: MemoryEmbeddingProvider | None = None
 
     def classify_write(self, request: SaveMemoryRequest) -> MemoryWriteClassification:
         """Classify whether a write request belongs in the memory pipeline."""
@@ -279,6 +281,7 @@ class VeraBrainApplication:
     unit_of_work: PersistenceUnitOfWork
     clock: Clock = _utc_now
     id_generator: IdGenerator = _new_id
+    memory_embedding_provider: MemoryEmbeddingProvider | None = None
     memory_query_embedding_provider: QueryEmbeddingProvider | None = None
     memory: MemoryApplicationService = field(init=False)
     knowledge: KnowledgeApplicationService = field(init=False)
@@ -290,6 +293,7 @@ class VeraBrainApplication:
             unit_of_work=self.unit_of_work,
             clock=self.clock,
             id_generator=self.id_generator,
+            memory_embedding_provider=self.memory_embedding_provider,
         )
         self.knowledge = KnowledgeApplicationService(
             unit_of_work=self.unit_of_work,

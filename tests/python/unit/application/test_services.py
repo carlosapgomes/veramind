@@ -17,6 +17,7 @@ from verabrain.application import (
     KnowledgeLinkRecord,
     KnowledgeRecord,
     KnowledgeRepository,
+    MemoryEmbeddingProvider,
     MemoryApplicationService,
     MemoryRecord,
     MemoryRepository,
@@ -186,6 +187,11 @@ class FailingUnitOfWork(RecordingUnitOfWork):
         self._memories = FailingMemoryRepository()
 
 
+class StubMemoryEmbeddingProvider(MemoryEmbeddingProvider):
+    def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
+        return (0.1, 0.2, 0.3)
+
+
 def test_memory_service_saves_records_and_commits() -> None:
     unit_of_work = RecordingUnitOfWork()
     memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
@@ -251,6 +257,18 @@ def test_memory_service_exposes_write_classification_for_ignored_inputs() -> Non
     assert memory_repository.saved is None
     assert unit_of_work.commits == 0
     assert unit_of_work.rollbacks == 0
+
+
+def test_memory_service_accepts_memory_capture_embedding_provider() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    provider = StubMemoryEmbeddingProvider()
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        memory_embedding_provider=provider,
+    )
+
+    assert service.memory_embedding_provider is provider
 
 
 def test_memory_service_updates_existing_memory_when_duplicate_is_materially_the_same() -> None:
@@ -551,3 +569,15 @@ def test_context_bundle_falls_back_when_memory_query_embedding_provider_fails() 
     assert bundle.memories[0].type == "preference"
     assert memory_repository.last_search_query is not None
     assert memory_repository.last_search_query.query_embedding is None
+
+
+def test_verabrain_application_passes_memory_capture_embedding_provider() -> None:
+    provider = StubMemoryEmbeddingProvider()
+    application = VeraBrainApplication(
+        unit_of_work=RecordingUnitOfWork(),
+        clock=_now,
+        id_generator=lambda: "fixed-id",
+        memory_embedding_provider=provider,
+    )
+
+    assert application.memory.memory_embedding_provider is provider
