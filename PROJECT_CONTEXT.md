@@ -59,6 +59,13 @@ Agreed initial stack:
 - Hermes Agent as the intended runtime shell
 - MCP-first integration with an optional thin Hermes plugin later
 
+Delivery approach:
+
+- Implementation should progress through small vertical slices that
+  touch the necessary layers to prove observable behavior.
+- Broad horizontal expansion by layer should be avoided unless a slice
+  is intentionally design-only or infrastructure-only.
+
 Current project state:
 
 - Foundation and specification phase
@@ -148,6 +155,8 @@ Current project state:
   (spec, task, and commit).
 - A successful slice is only complete after its commit is pushed from
   the current branch.
+- Prefer slices that prove observable end-to-end behavior across the
+  relevant layers instead of widening one layer in isolation.
 - Keep explicit boundaries between runtime, memory, tools, and
   knowledge.
 - Prefer controlled wrappers over unrestricted shell access.

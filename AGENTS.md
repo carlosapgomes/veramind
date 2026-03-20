@@ -43,6 +43,11 @@ uv run pyright
 ## 4. Architecture and Constraints
 
 - Define explicit module boundaries and keep dependencies unidirectional.
+- Prefer vertical slices that deliver observable end-to-end behavior
+  across the relevant layers of the system.
+- Avoid horizontal implementation slices limited to a single layer
+  unless the slice is explicitly design-only or infrastructure-only by
+  decision.
 - Separate the system into `agent runtime`, `memory layer`,
   `tool layer`, and `knowledge system`.
 - Treat Hermes Agent as the current runtime shell and VeraBrain as a
@@ -79,6 +84,8 @@ uv run pyright
 ## 7. Stop Rule (CRUCIAL)
 
 - Implement one task slice at a time.
+- Default to a small vertical slice that touches the necessary layers
+  to prove behavior, not a broad layer-by-layer expansion.
 - Run the validation commands from section 2.
 - Update tasks, specs, and bilingual document mirrors.
 - Commit the completed slice with a clear and traceable message.
@@ -110,6 +117,8 @@ uv run pyright
 ```text
 Read AGENTS.md and PROJECT_CONTEXT.md first.
 Implement ONLY the next incomplete slice from tasks/spec.
+Prefer a vertical slice that proves observable behavior across the
+necessary layers unless the task is explicitly design-only.
 If a touched document is bilingual, update both language versions.
 Respect the Python-first Hermes-centered direction unless an ADR changes
 it again.
