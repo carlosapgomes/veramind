@@ -193,7 +193,11 @@ Current project state:
 
 ## Likely Next Slices
 
-- Open the `hermes-verabrain-memory-boundary` change on top of the
-  archived baseline
+- Open and implement the `hermes-verabrain-memory-boundary` change on
+  top of the archived baseline
+
+Current active change:
+
+- `hermes-verabrain-memory-boundary`
 
 <!-- generated-by: project-context-maintainer -->
