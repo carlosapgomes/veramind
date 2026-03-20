@@ -140,23 +140,23 @@ Current project state:
 - The memory embedding write path now has dedicated unit coverage for
   embedding resolution, fallback status, and deduplicated action
   metadata
-- A dedicated OpenSpec change now defines the next `memory-loop-mvp`
-  slice for the first observable end-to-end VeraBrain behavior
-- The active `memory-loop-mvp` change now includes an explicit design
+- The completed `memory-loop-mvp` OpenSpec change is now ready to be
+  treated as archived baseline work
+- The archived `memory-loop-mvp` change includes an explicit design
   artifact for the canonical vertical memory loop
-- The active `memory-loop-mvp` change now defines the canonical happy
+- The archived `memory-loop-mvp` change defines the canonical happy
   path for `capture -> classify -> deduplicate -> embed -> persist ->
   retrieve -> expose via MCP`
-- The active `memory-loop-mvp` change now defines the minimum bounded
+- The archived `memory-loop-mvp` change defines the minimum bounded
   retrieval behavior that Hermes must consume through the MCP-facing
   surface
-- The active `memory-loop-mvp` change now defines explicit fallback
+- The archived `memory-loop-mvp` change defines explicit fallback
   outcomes for `saved_with_embedding`, `saved_without_embedding`, and
   `save_failed`
-- The active `memory-loop-mvp` change now has an initial vertical
+- The archived `memory-loop-mvp` change has an initial vertical
   integration slice over MCP adapter, application services, and
   in-memory infrastructure
-- The active `memory-loop-mvp` change now has end-to-end validation
+- The archived `memory-loop-mvp` change has end-to-end validation
   coverage for `saved_with_embedding`, `saved_without_embedding`, and
   `save_failed` through the MCP-facing loop
 
@@ -193,6 +193,7 @@ Current project state:
 
 ## Likely Next Slices
 
-- Implement the `memory-loop-mvp` change as a vertical end-to-end slice
+- Open the `hermes-verabrain-memory-boundary` change on top of the
+  archived baseline
 
 <!-- generated-by: project-context-maintainer -->
