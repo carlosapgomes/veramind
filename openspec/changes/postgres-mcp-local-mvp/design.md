@@ -80,6 +80,21 @@ This split is intentional:
 - host-launched `stdio` keeps the initial Hermes MCP integration simple
   and aligned with the current server surface
 
+The minimum Compose environment should provide:
+
+- one dedicated Postgres service for VeraBrain
+- explicit database credentials and database name for local MVP use
+- a host-visible port so the host-launched VeraBrain process can connect
+- a project-scoped persistent volume
+- a readiness signal, such as a healthcheck, so the startup flow can
+  wait for Postgres intentionally
+- `pgvector` availability through the selected image or initialization
+  path
+
+The initial Compose scope should stay narrow. It is enough for the MVP
+to own the durable database path without yet containerizing the
+VeraBrain MCP process itself.
+
 ## Hermes MCP Interaction Path
 
 The local MVP remains MCP-first.

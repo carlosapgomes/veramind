@@ -11,7 +11,7 @@
 
 - [x] Define the canonical local MVP startup flow from runtime settings
   to MCP server startup
-- [ ] Define the minimum Docker Compose-based Postgres and `pgvector`
+- [x] Define the minimum Docker Compose-based Postgres and `pgvector`
   environment for the MVP
 - [ ] Define the minimum Hermes-facing MCP configuration and manual
   smoke path for the MVP

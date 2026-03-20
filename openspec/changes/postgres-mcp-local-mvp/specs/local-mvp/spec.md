@@ -60,12 +60,34 @@ Docker Compose.
 
 The MVP path MUST NOT depend on implicit machine-local database state.
 
+The minimum Docker Compose environment MUST define:
+
+- a dedicated Postgres service owned by the VeraBrain project
+- an explicit database name, username, password, and host port for the
+  host-launched VeraBrain process
+- persistent storage scoped to the VeraBrain Postgres service
+- a readiness check or equivalent startup signal
+- an image or initialization path that makes `pgvector` available to the
+  VeraBrain schema bootstrap path
+
+The Compose environment MAY stay narrowly focused on the database for
+the initial MVP and does not need to containerize the VeraBrain process
+itself.
+
 #### Scenario: Contributor provisions local persistence for the MVP
 
 - **WHEN** a contributor prepares the local VeraBrain MVP environment
 - **THEN** the contributor uses the project-local Docker Compose path to
   provision Postgres with `pgvector`
 - **AND** the MVP path does not assume hidden database setup
+
+#### Scenario: Host-launched VeraBrain connects to the Compose database
+
+- **WHEN** a contributor starts the local MVP with host-launched MCP
+- **THEN** the VeraBrain host process connects to an explicit Postgres
+  host/port exposed by the project-local Compose environment
+- **AND** the Compose stack remains the source of truth for the local
+  durable database
 
 ### Requirement: Define the minimum Hermes-facing MCP path
 

@@ -219,5 +219,9 @@ Current project state:
 - The canonical startup order for that MVP is now fixed as
   `Compose Postgres -> runtime settings -> schema bootstrap ->
   Postgres application factory -> host stdio MCP server`
+- The minimum local infrastructure contract for that MVP is now fixed as
+  a dedicated Compose Postgres service with explicit credentials,
+  host-visible port, project-scoped persistence, readiness signaling,
+  and `pgvector` availability
 
 <!-- generated-by: project-context-maintainer -->
