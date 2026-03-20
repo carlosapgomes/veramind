@@ -16,4 +16,4 @@
 - [x] Define the minimum Hermes-facing MCP configuration and manual
   smoke path for the MVP
 - [x] Add the first runnable local entrypoint or launcher for the MVP
-- [ ] Add smoke-oriented integration coverage for the local MVP path
+- [x] Add smoke-oriented integration coverage for the local MVP path

@@ -230,5 +230,8 @@ Current project state:
 - The project now exposes a first runnable local MVP launcher through
   the `verabrain-mcp-local-mvp` Python entrypoint, reusing the existing
   Postgres runtime wiring and MCP stdio server path
+- The local MVP change now has smoke-oriented integration coverage for
+  launcher startup, MCP tool exposure, durable save, bounded retrieval,
+  and bootstrap failure before server startup
 
 <!-- generated-by: project-context-maintainer -->
