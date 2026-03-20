@@ -17,3 +17,4 @@
   smoke path for the MVP
 - [x] Add the first runnable local entrypoint or launcher for the MVP
 - [x] Add smoke-oriented integration coverage for the local MVP path
+- [x] Add the local MVP runbook and operational documentation assets

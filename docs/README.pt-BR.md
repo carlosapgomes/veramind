@@ -9,6 +9,7 @@ outros documentos duráveis do projeto.
 
 - `docs/domain/`: Documentos conceituais e de modelo de domínio
 - `docs/adr/`: Architecture Decision Records
+- `docs/runbooks/`: Runbooks práticos para caminhos locais e operacionais
 - `docs/releases/`: Evidências de release e notas associadas
 
 ## Regra bilíngue

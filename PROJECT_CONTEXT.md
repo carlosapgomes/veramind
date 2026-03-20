@@ -233,5 +233,8 @@ Current project state:
 - The local MVP change now has smoke-oriented integration coverage for
   launcher startup, MCP tool exposure, durable save, bounded retrieval,
   and bootstrap failure before server startup
+- The local MVP path now has a committed `docker-compose.yml`,
+  `.env.example`, and bilingual runbook documentation for manual setup
+  and Hermes MCP smoke execution
 
 <!-- generated-by: project-context-maintainer -->

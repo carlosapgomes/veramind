@@ -9,6 +9,7 @@ other durable project documents.
 
 - `docs/domain/`: Conceptual and domain-model documents
 - `docs/adr/`: Architecture Decision Records
+- `docs/runbooks/`: Practical runbooks for local and operational paths
 - `docs/releases/`: Release evidence and release-oriented notes
 
 ## Bilingual Rule

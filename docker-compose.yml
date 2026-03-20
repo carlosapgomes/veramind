@@ -1,0 +1,26 @@
+services:
+  verabrain-postgres:
+    image: pgvector/pgvector:pg17
+    container_name: verabrain-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${VERABRAIN_POSTGRES_DB:-verabrain}
+      POSTGRES_USER: ${VERABRAIN_POSTGRES_USER:-verabrain}
+      POSTGRES_PASSWORD: ${VERABRAIN_POSTGRES_PASSWORD:-verabrain}
+    ports:
+      - "${VERABRAIN_POSTGRES_PORT:-54329}:5432"
+    volumes:
+      - verabrain-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+volumes:
+  verabrain-postgres-data:

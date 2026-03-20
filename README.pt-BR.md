@@ -5,6 +5,18 @@
 Fundação de um agente pessoal de IA com foco em memória durável,
 ferramentas explícitas e uma base consultável de conhecimento.
 
+## MVP local
+
+O primeiro caminho prático de MVP agora tem:
+
+- Postgres do projeto via Docker Compose
+- launcher MCP iniciado no host via `verabrain-mcp-local-mvp`
+- smoke path do MCP voltado para o Hermes
+
+Runbook:
+
+- [Runbook do MVP Local](./docs/runbooks/local-mvp.pt-BR.md)
+
 ## Fluxo de trabalho
 
 Este repositório usa `AGENTS.md`, `PROJECT_CONTEXT.md`, ADRs e artefatos
