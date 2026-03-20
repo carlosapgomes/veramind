@@ -15,7 +15,7 @@
   must expose to Hermes
 - [x] Define the observable fallback behavior for embedding or
   persistence degradation in the MVP loop
-- [ ] Add an initial vertical integration slice that proves the MVP
+- [x] Add an initial vertical integration slice that proves the MVP
   memory loop through the relevant application, adapter, and
   infrastructure boundaries
 - [ ] Add end-to-end validation coverage for the MVP memory loop

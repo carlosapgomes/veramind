@@ -153,6 +153,9 @@ Current project state:
 - The active `memory-loop-mvp` change now defines explicit fallback
   outcomes for `saved_with_embedding`, `saved_without_embedding`, and
   `save_failed`
+- The active `memory-loop-mvp` change now has an initial vertical
+  integration slice over MCP adapter, application services, and
+  in-memory infrastructure
 
 ## Documentation Policy
 
