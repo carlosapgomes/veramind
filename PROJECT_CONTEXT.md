@@ -213,5 +213,8 @@ Current project state:
 
 - Define and implement the `postgres-mcp-local-mvp` change as the first
   practical local MVP run path
+- Use the change design artifact to keep the local MVP work focused on
+  the runnable `Postgres -> runtime assembly -> MCP -> manual smoke`
+  flow
 
 <!-- generated-by: project-context-maintainer -->

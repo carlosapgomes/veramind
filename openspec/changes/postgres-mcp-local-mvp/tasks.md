@@ -4,6 +4,7 @@
 
 - [x] Define the Postgres MCP local MVP proposal
 - [x] Define the initial Postgres MCP local MVP specification
+- [x] Define the initial Postgres MCP local MVP design
 - [x] Record the next implementation-oriented tasks
 
 ## 2. Next implementation slices
