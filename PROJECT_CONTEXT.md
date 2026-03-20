@@ -227,5 +227,8 @@ Current project state:
   explicit host-launched `stdio` MCP server entry with explicit runtime
   env, plus a manual smoke path that proves `save_memory` and bounded
   recall through Hermes
+- The project now exposes a first runnable local MVP launcher through
+  the `verabrain-mcp-local-mvp` Python entrypoint, reusing the existing
+  Postgres runtime wiring and MCP stdio server path
 
 <!-- generated-by: project-context-maintainer -->
