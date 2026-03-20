@@ -208,5 +208,8 @@ Current active change:
 - The active `hermes-verabrain-memory-boundary` change now defines the
   initial consultation order of `Hermes local context first`,
   `VeraBrain durable retrieval second`
+- The active `hermes-verabrain-memory-boundary` change now defines
+  conservative promotion rules with `not-promotable-by-default` versus
+  `promotion-candidate` session material
 
 <!-- generated-by: project-context-maintainer -->

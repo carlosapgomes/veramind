@@ -13,7 +13,7 @@
   versus VeraBrain durable memory
 - [x] Define the consultation order Hermes should follow before calling
   VeraBrain durable memory retrieval
-- [ ] Define the promotion rules for when session-local context becomes
+- [x] Define the promotion rules for when session-local context becomes
   a durable VeraBrain memory candidate
 - [ ] Define the MCP-first interaction pattern that applies this
   boundary without requiring a native Hermes plugin

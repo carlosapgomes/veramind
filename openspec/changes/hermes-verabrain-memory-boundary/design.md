@@ -128,6 +128,34 @@ The initial promotion boundary is conservative:
 This keeps durable-memory writes intentional until a later change
 defines stronger automation or suggestion behavior.
 
+Operationally, promotion has two policy buckets:
+
+- `not-promotable-by-default`
+- `promotion-candidate`
+
+`not-promotable-by-default` covers:
+
+- transient conversation details
+- immediate task-progress state
+- local execution context for the active loop
+
+`promotion-candidate` covers:
+
+- stable preferences
+- durable profile facts
+- durable project facts
+- decisions, followups, and habits with cross-session value
+
+The promotion sequence is:
+
+1. Hermes or the user identifies a candidate worth durable retention.
+2. An explicit VeraBrain capture action is invoked through MCP.
+3. The candidate enters the VeraBrain write pipeline.
+4. Authority transfers only if persistence succeeds.
+
+So promotion is not "Hermes noticed something important." Promotion is
+"explicit capture plus successful VeraBrain persistence."
+
 ## MCP-First Interaction Pattern
 
 The initial policy should work entirely through MCP-first integration.

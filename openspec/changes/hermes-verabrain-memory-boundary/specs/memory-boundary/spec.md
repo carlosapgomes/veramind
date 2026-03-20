@@ -170,6 +170,25 @@ The initial promotion rule is conservative:
 - promotion to VeraBrain durable memory requires an explicit capture
   action through the VeraBrain MCP-facing memory surface
 
+The initial promotion rule also distinguishes:
+
+- `not-promotable-by-default` session-local material, such as transient
+  conversation detail, task-progress state, and immediate loop context
+- `promotion-candidate` material, such as stable preferences, durable
+  profile facts, decisions, followups, habits, and durable project
+  context
+
+The initial promotion event is:
+
+1. Hermes or the user identifies a session-local fact as worth durable
+   retention.
+2. Hermes or the user invokes the explicit VeraBrain memory-capture
+   surface.
+3. The information enters the VeraBrain write pipeline as a durable
+   memory candidate.
+4. Only successful persistence transfers durable authority to
+   VeraBrain.
+
 Later changes MAY introduce stronger automation or suggestion behavior,
 but this change MUST not assume automatic background promotion.
 
@@ -180,6 +199,14 @@ but this change MUST not assume automatic background promotion.
 - **THEN** the detail remains Hermes-owned
 - **AND** the system does not assume it became durable memory
 
+#### Scenario: Non-promotable-by-default task state remains Hermes-owned
+
+- **WHEN** the information is task-progress detail, immediate execution
+  state, or transient loop context
+- **THEN** it remains Hermes-owned by default
+- **AND** the policy does not treat it as a durable-memory candidate
+  unless a later change expands that rule explicitly
+
 #### Scenario: Durable fact is explicitly captured through VeraBrain
 
 - **WHEN** Hermes or the user invokes the VeraBrain memory-capture
@@ -187,6 +214,15 @@ but this change MUST not assume automatic background promotion.
 - **THEN** the information becomes a VeraBrain durable-memory candidate
 - **AND** the existing VeraBrain write pipeline determines whether it is
   actually persisted
+
+#### Scenario: Promotion candidate does not transfer authority without persistence
+
+- **WHEN** Hermes explicitly captures a promotion-candidate fact
+- **AND** the VeraBrain write path rejects or fails to persist it
+- **THEN** the information does not become VeraBrain-owned durable
+  memory
+- **AND** durable authority does not transfer merely because capture was
+  attempted
 
 ### Requirement: Keep MCP-first policy separate from later Hermes skills
 
