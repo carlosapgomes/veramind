@@ -4,6 +4,7 @@
 
 - [x] Define the memory loop MVP proposal
 - [x] Define the initial memory loop MVP specification
+- [x] Define the initial memory loop MVP design
 - [x] Record the next implementation-oriented tasks
 
 ## 2. Next implementation slices

@@ -142,6 +142,8 @@ Current project state:
   metadata
 - A dedicated OpenSpec change now defines the next `memory-loop-mvp`
   slice for the first observable end-to-end VeraBrain behavior
+- The active `memory-loop-mvp` change now includes an explicit design
+  artifact for the canonical vertical memory loop
 
 ## Documentation Policy
 
