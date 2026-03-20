@@ -140,6 +140,8 @@ Current project state:
 - The memory embedding write path now has dedicated unit coverage for
   embedding resolution, fallback status, and deduplicated action
   metadata
+- A dedicated OpenSpec change now defines the next `memory-loop-mvp`
+  slice for the first observable end-to-end VeraBrain behavior
 
 ## Documentation Policy
 
@@ -174,6 +176,6 @@ Current project state:
 
 ## Likely Next Slices
 
-- Open the next OpenSpec change on top of the archived baseline
+- Implement the `memory-loop-mvp` change as a vertical end-to-end slice
 
 <!-- generated-by: project-context-maintainer -->
