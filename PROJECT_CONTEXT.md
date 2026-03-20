@@ -199,5 +199,8 @@ Current project state:
 Current active change:
 
 - `hermes-verabrain-memory-boundary`
+- The active `hermes-verabrain-memory-boundary` change now includes an
+  explicit design artifact for authority, consultation order, and
+  promotion boundaries
 
 <!-- generated-by: project-context-maintainer -->

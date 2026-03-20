@@ -4,6 +4,7 @@
 
 - [x] Define the Hermes-VeraBrain memory boundary proposal
 - [x] Define the initial Hermes-VeraBrain memory boundary specification
+- [x] Define the initial Hermes-VeraBrain memory boundary design
 - [x] Record the next implementation-oriented tasks
 
 ## 2. Next implementation slices
