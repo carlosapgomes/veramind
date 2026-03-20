@@ -14,13 +14,15 @@ workflow.
 
 The canonical local MVP flow is:
 
-1. provision a local Postgres instance with `pgvector`
+1. provision a local Postgres instance with `pgvector` through Docker
+   Compose
 2. provide explicit runtime settings to VeraBrain
 3. bootstrap or verify the Postgres schema through infrastructure
    runtime wiring
 4. assemble the `VeraBrainApplication` over the Postgres-backed
    unit-of-work
-5. expose the application through the MCP server surface
+5. expose the application through the MCP server surface from the host
+   over `stdio`
 6. connect Hermes to that MCP server
 7. manually exercise `save_memory`, `search_memory`, and
    `get_context_bundle`
@@ -48,13 +50,18 @@ semantics.
 
 The first local MVP should assume:
 
-- a contributor can provision Postgres locally in a reproducible way
+- a contributor provisions Postgres locally in a reproducible way
+  through project-owned Docker Compose configuration
 - the required `pgvector` extension is available
+- the VeraBrain MCP server starts from the host process environment
 - the MVP path should not depend on undocumented machine-local setup
 
-Containerized local infrastructure is the preferred initial direction
-because it minimizes hidden environmental assumptions and improves
-repeatability across contributors.
+This split is intentional:
+
+- Compose isolates the durable Postgres dependency from the rest of the
+  machine
+- host-launched `stdio` keeps the initial Hermes MCP integration simple
+  and aligned with the current server surface
 
 ## Hermes MCP Interaction Path
 
@@ -64,7 +71,7 @@ Hermes should:
 
 - keep local session and prompt memory as defined by the archived
   boundary change
-- call VeraBrain through the existing MCP tool surface
+- call VeraBrain through the existing host-launched MCP tool surface
 - use `save_memory` for explicit durable promotion
 - use `search_memory` or `get_context_bundle` for bounded durable recall
 
@@ -75,9 +82,10 @@ to function.
 
 The minimum manual smoke workflow should prove:
 
-1. local Postgres is available
-2. VeraBrain can start over the configured Postgres path
-3. the MCP server is reachable through its intended local runtime path
+1. project-local Docker Compose Postgres is available
+2. VeraBrain can start from the host over the configured Postgres path
+3. the MCP server is reachable through its intended local `stdio`
+   runtime path
 4. a durable memory can be saved
 5. the saved memory can be retrieved in bounded form
 6. the observed behavior matches the archived memory-loop MVP outcomes

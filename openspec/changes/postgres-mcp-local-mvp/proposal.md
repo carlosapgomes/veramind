@@ -32,6 +32,11 @@ project would remain in an awkward state where:
   system manually
 - Define the first Hermes-facing local integration shape for the MVP
 
+The canonical initial path is:
+
+- project-local Postgres provisioned through Docker Compose
+- VeraBrain MCP launched from the host over `stdio`
+
 ## Non-Goals
 
 - Production deployment hardening

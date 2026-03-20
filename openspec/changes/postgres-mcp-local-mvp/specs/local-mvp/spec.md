@@ -28,14 +28,16 @@ MCP adapter boundaries rather than creating a parallel MVP-only runtime.
 The project MUST define the minimum local Postgres environment required
 to run the MVP, including the expectation that `pgvector` is available.
 
-This requirement MAY be satisfied through containerized local
-infrastructure, documented setup steps, or both, but the MVP path MUST
-not depend on implicit local machine state.
+The canonical MVP path MUST provision that Postgres environment through
+Docker Compose.
+
+The MVP path MUST NOT depend on implicit machine-local database state.
 
 #### Scenario: Contributor provisions local persistence for the MVP
 
 - **WHEN** a contributor prepares the local VeraBrain MVP environment
-- **THEN** the required Postgres runtime prerequisites are explicit
+- **THEN** the contributor uses the project-local Docker Compose path to
+  provision Postgres with `pgvector`
 - **AND** the MVP path does not assume hidden database setup
 
 ### Requirement: Define the minimum Hermes-facing MCP path
@@ -43,14 +45,16 @@ not depend on implicit local machine state.
 The project MUST define the minimum Hermes-facing MCP configuration
 needed to exercise the MVP locally.
 
-The initial MVP path MUST focus on MCP-first integration and MUST NOT
+The initial MVP path MUST focus on MCP-first integration, MUST launch
+the VeraBrain MCP server from the host over `stdio`, and MUST NOT
 depend on a native Hermes plugin or Hermes skill to become runnable.
 
 #### Scenario: Contributor points Hermes at the local VeraBrain MVP
 
 - **WHEN** a contributor configures Hermes to use the local VeraBrain
   MCP server
-- **THEN** the configuration path is explicit
+- **THEN** the configuration path is explicit and uses a host-launched
+  `stdio` server process
 - **AND** the MVP can be exercised without introducing a native Hermes
   extension
 
