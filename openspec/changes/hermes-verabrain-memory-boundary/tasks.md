@@ -15,7 +15,7 @@
   VeraBrain durable memory retrieval
 - [x] Define the promotion rules for when session-local context becomes
   a durable VeraBrain memory candidate
-- [ ] Define the MCP-first interaction pattern that applies this
+- [x] Define the MCP-first interaction pattern that applies this
   boundary without requiring a native Hermes plugin
 - [ ] Add validation coverage or operational checks for the initial
   boundary policy once implemented

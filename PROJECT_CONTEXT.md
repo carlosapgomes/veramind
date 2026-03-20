@@ -211,5 +211,8 @@ Current active change:
 - The active `hermes-verabrain-memory-boundary` change now defines
   conservative promotion rules with `not-promotable-by-default` versus
   `promotion-candidate` session material
+- The active `hermes-verabrain-memory-boundary` change now defines the
+  MCP-first interaction pattern for applying the boundary through
+  `search_memory`, `get_context_bundle`, and `save_memory`
 
 <!-- generated-by: project-context-maintainer -->

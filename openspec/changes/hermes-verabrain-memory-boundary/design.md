@@ -166,6 +166,23 @@ The practical pattern is:
 - Hermes calls VeraBrain MCP retrieval when durable memory is needed
 - Hermes calls VeraBrain MCP capture only when durable promotion is
   intentional
+- Hermes does not need a native plugin or skill for this baseline
+
+Operationally, the existing MCP-first pattern is enough to apply the
+policy:
+
+- `search_memory` and `get_context_bundle` cover bounded durable recall
+- `save_memory` covers explicit durable capture
+
+So the initial runtime choreography is:
+
+1. local Hermes context and session memory first
+2. bounded VeraBrain retrieval through MCP when durable recall is needed
+3. explicit VeraBrain capture through MCP when durable promotion is
+   intended
+
+This keeps the boundary enforceable with the current integration
+surface, before any future skill or plugin exists.
 
 This means the policy is enforceable before any native plugin or skill
 exists.

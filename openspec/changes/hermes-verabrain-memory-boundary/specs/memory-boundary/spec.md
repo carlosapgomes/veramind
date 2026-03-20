@@ -229,6 +229,24 @@ but this change MUST not assume automatic background promotion.
 The initial boundary policy MUST work with MCP-first integration and
 MUST NOT depend on a native Hermes plugin or skill to be valid.
 
+The initial MCP-first interaction pattern is:
+
+1. Hermes keeps active-session reasoning in its own local context.
+2. Hermes uses VeraBrain MCP retrieval only for durable recall, through
+   bounded surfaces such as direct memory search or bounded context
+   retrieval.
+3. Hermes uses VeraBrain MCP capture only for explicit durable-memory
+   promotion.
+4. Hermes does not require a native plugin hook to apply this policy.
+
+The initial MCP-first pattern MUST therefore preserve:
+
+- local Hermes handling for active-session context
+- explicit MCP calls for durable retrieval or capture
+- no hidden background promotion requirement
+- no requirement that a Hermes skill or plugin be present before the
+  boundary is valid
+
 Hermes skills MAY later help operationalize this policy, but the policy
 itself MUST be defined independently from prompt wording or skill text.
 
@@ -239,3 +257,18 @@ itself MUST be defined independently from prompt wording or skill text.
   model
 - **AND** a future Hermes skill is treated as an operational layer over
   the policy rather than the policy source itself
+
+#### Scenario: Hermes applies the boundary through MCP without native extension points
+
+- **WHEN** Hermes needs durable recall or explicit durable capture
+- **THEN** Hermes can apply the policy through existing VeraBrain
+  MCP-facing surfaces
+- **AND** the policy does not require a native Hermes plugin or hook to
+  be operationally valid
+
+#### Scenario: Active-session handling remains local to Hermes
+
+- **WHEN** the interaction only requires active-session context
+- **THEN** Hermes keeps that handling local
+- **AND** the MCP-first boundary does not force a VeraBrain call for
+  every interaction
