@@ -144,6 +144,24 @@ The initial MVP MUST at least cover:
 The fallback behavior MUST remain observable to contributors and MUST
 NOT silently redefine the meaning of the flow.
 
+For the MVP, the observable fallback policy is:
+
+- embedding degradation is survivable when durable persistence remains
+  available
+- persistence degradation is not survivable for the memory-capture
+  result and MUST be surfaced as failure
+- retrieval degradation that results from failed persistence MUST not be
+  misrepresented as "no memories found"
+
+The minimum observable outcomes are:
+
+- on embedding degradation, the saved memory record carries explicit
+  write-path metadata showing the degraded embedding state
+- on persistence degradation, the caller receives an explicit failure
+  response from the MCP-facing surface or application boundary
+- the system MUST distinguish "memory saved without embedding" from
+  "memory not saved"
+
 #### Scenario: Embedding degrades but persistence remains available
 
 - **WHEN** the system cannot obtain an embedding during durable memory
@@ -151,6 +169,16 @@ NOT silently redefine the meaning of the flow.
 - **THEN** the fallback behavior remains explicit
 - **AND** the MVP can still persist the memory if the write policy
   allows it
+- **AND** the resulting record remains observably marked as degraded
+  rather than fully successful embedding capture
+
+#### Scenario: Embedding provider failure does not masquerade as write failure
+
+- **WHEN** embedding generation fails but durable persistence succeeds
+- **THEN** the MVP reports a successful durable write outcome
+- **AND** the degradation remains explicit in the saved memory record
+- **AND** the system does not report that the memory capture itself
+  failed
 
 #### Scenario: Persistence degrades during the MVP loop
 
@@ -158,6 +186,13 @@ NOT silently redefine the meaning of the flow.
 - **THEN** the failure remains explicit to the caller
 - **AND** the system does not pretend that the memory loop completed
   successfully
+
+#### Scenario: Persistence failure remains explicit at the MCP-facing boundary
+
+- **WHEN** Hermes invokes the MCP-facing memory-capture surface
+- **AND** the durable write path fails
+- **THEN** the MCP-facing response indicates failure explicitly
+- **AND** the response does not imply that the memory was saved
 
 ### Requirement: Keep the MVP narrow relative to later roadmap items
 

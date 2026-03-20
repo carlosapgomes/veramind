@@ -13,7 +13,7 @@
   `capture -> classify -> deduplicate -> embed -> persist -> retrieve`
 - [x] Define the minimum MCP-facing bounded retrieval behavior the MVP
   must expose to Hermes
-- [ ] Define the observable fallback behavior for embedding or
+- [x] Define the observable fallback behavior for embedding or
   persistence degradation in the MVP loop
 - [ ] Add an initial vertical integration slice that proves the MVP
   memory loop through the relevant application, adapter, and

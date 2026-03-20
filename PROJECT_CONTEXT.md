@@ -150,6 +150,9 @@ Current project state:
 - The active `memory-loop-mvp` change now defines the minimum bounded
   retrieval behavior that Hermes must consume through the MCP-facing
   surface
+- The active `memory-loop-mvp` change now defines explicit fallback
+  outcomes for `saved_with_embedding`, `saved_without_embedding`, and
+  `save_failed`
 
 ## Documentation Policy
 

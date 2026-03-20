@@ -133,6 +133,48 @@ The MVP must make two degradation cases explicit:
 
 The MVP should prove graceful degradation, not silent degradation.
 
+### Embedding degradation
+
+For the MVP, embedding degradation is a survivable fallback:
+
+- if the provider is unavailable, returns no embedding, or raises an
+  error
+- and durable persistence still succeeds
+- then the memory loop still counts as a successful durable capture
+
+What must remain observable:
+
+- the saved memory record is marked with explicit embedding fallback
+  metadata
+- the system can distinguish a degraded embedded write from a fully
+  embedded write
+
+### Persistence degradation
+
+For the MVP, persistence degradation is not survivable:
+
+- if the durable write does not commit successfully
+- then the memory loop does not count as completed
+- and the failure must remain explicit to the caller
+
+At the MCP-facing surface, this means:
+
+- Hermes should receive an explicit failure response
+- VeraBrain should not collapse persistence failure into empty retrieval
+  results or a misleading success payload
+
+## Observable Fallback Outcomes
+
+The MVP should make these outcomes easy to reason about:
+
+- `saved_with_embedding`
+- `saved_without_embedding`
+- `save_failed`
+
+The current write-path metadata and adapter error behavior are
+sufficient to represent those distinctions for the MVP, even if later
+changes refine the exact UX or tool wording.
+
 ## Out of Scope
 
 The MVP intentionally does not define:
