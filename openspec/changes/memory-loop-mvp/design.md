@@ -62,6 +62,28 @@ production hardening, broader knowledge work, or execution workflows.
 - Does not own memory rules, retrieval ranking policy, or persistence
   semantics.
 
+## Minimum MCP-Facing Retrieval Behavior
+
+The MVP does not require a new MCP tool. It can be proven with the
+existing bounded retrieval surfaces:
+
+- `search_memory` for direct bounded durable-memory lookup
+- `get_context_bundle` for bounded cross-domain context where memory is
+  one part of the returned payload
+
+For this MVP, the MCP-facing retrieval contract should prove only the
+minimum useful behavior:
+
+- Hermes can submit a text query
+- Hermes can rely on an explicit or default memory bound
+- VeraBrain returns a small list of durable memories or a bounded memory
+  segment inside the context bundle
+- the returned payload is agent-consumable and does not expose
+  repository or Postgres implementation concerns
+
+This means the MVP should prove bounded memory usefulness, not final
+tooling richness.
+
 ### Application layer
 
 - Orchestrates the capture and retrieval loop.
@@ -95,6 +117,8 @@ following are true:
 - A later bounded query can retrieve that memory as relevant context.
 - Hermes can consume that bounded context through the MCP-facing
   surface.
+- The MCP-facing retrieval response remains bounded and agent-consumable
+  for both direct memory lookup and context-bundle use.
 
 ## Failure and Fallback Paths
 

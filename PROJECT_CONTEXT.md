@@ -147,6 +147,9 @@ Current project state:
 - The active `memory-loop-mvp` change now defines the canonical happy
   path for `capture -> classify -> deduplicate -> embed -> persist ->
   retrieve -> expose via MCP`
+- The active `memory-loop-mvp` change now defines the minimum bounded
+  retrieval behavior that Hermes must consume through the MCP-facing
+  surface
 
 ## Documentation Policy
 

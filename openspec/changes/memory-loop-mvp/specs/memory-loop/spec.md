@@ -90,6 +90,24 @@ The initial behavior MUST prove that VeraBrain can return a limited,
 useful set of durable memories in response to a query that Hermes can
 consume through MCP.
 
+The minimum MCP-facing bounded retrieval behavior for this MVP is:
+
+- Hermes MAY call either the dedicated memory-search surface or the
+  bounded context-bundle surface
+- VeraBrain MUST return a bounded list rather than an unbounded dump
+- the response MUST be shaped for agent consumption
+- the response MUST expose durable memory content and relevant metadata
+  without exposing repository, driver, or storage-engine details
+- the response MUST preserve the requested or default bounds defined by
+  the MCP-facing contract
+
+For the MVP, a bounded result is considered valid when:
+
+- the MCP-facing request carries an explicit or default limit
+- VeraBrain applies that limit before returning memory items
+- the returned payload stays small enough for practical Hermes context
+  assembly rather than raw inspection of the full durable store
+
 #### Scenario: Hermes requests relevant context through MCP
 
 - **WHEN** Hermes calls the MCP-facing VeraBrain surface for memory
@@ -97,6 +115,21 @@ consume through MCP.
 - **THEN** VeraBrain returns bounded memory results
 - **AND** the returned context is shaped for agent consumption rather
   than raw storage inspection
+
+#### Scenario: Dedicated memory search remains bounded
+
+- **WHEN** Hermes calls the dedicated memory-search MCP surface
+- **THEN** VeraBrain returns only the bounded set of matching durable
+  memory items
+- **AND** the response remains independent from storage-layer details
+
+#### Scenario: Context bundle includes bounded memory context
+
+- **WHEN** Hermes calls the context-bundle MCP surface
+- **THEN** the memory portion of the bundle remains bounded by the
+  MCP-facing contract
+- **AND** the bundle stays shaped for agent consumption rather than
+  raw persistence introspection
 
 ### Requirement: Define explicit fallback in the MVP loop
 
