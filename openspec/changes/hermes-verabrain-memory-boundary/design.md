@@ -94,14 +94,27 @@ authority in Hermes until durable promotion is explicit.
 
 The initial consultation order is:
 
-1. Hermes first uses its active session context and built-in memory.
-2. Hermes consults VeraBrain when the task needs durable recall beyond
-   the current session.
-3. Hermes treats VeraBrain retrieval as complementary durable context,
-   not as a replacement for its active runtime context.
+1. Hermes first checks active session context and Hermes-owned memory.
+2. Hermes only escalates when the task needs durable cross-session
+   recall.
+3. Hermes queries VeraBrain through bounded MCP retrieval.
+4. Hermes uses returned durable context as a complement to the active
+   runtime context.
 
 This prevents VeraBrain from becoming a default lookup for every local
 interaction detail.
+
+Operationally, the decision sequence is:
+
+- "Can Hermes answer from active context or session-local recall?"
+  If yes, do not call VeraBrain.
+- "Does the task require durable memory beyond the current session?"
+  If yes, call VeraBrain bounded retrieval.
+- "Did VeraBrain return durable memory?"
+  If yes, merge it into the active context rather than replacing the
+  active context.
+
+This keeps VeraBrain retrieval intentional and bounded.
 
 ## Promotion Boundary
 

@@ -205,5 +205,8 @@ Current active change:
 - The active `hermes-verabrain-memory-boundary` change now defines the
   initial authority model across `Hermes-owned`,
   `promotion-candidate`, and `VeraBrain-owned` memory roles
+- The active `hermes-verabrain-memory-boundary` change now defines the
+  initial consultation order of `Hermes local context first`,
+  `VeraBrain durable retrieval second`
 
 <!-- generated-by: project-context-maintainer -->

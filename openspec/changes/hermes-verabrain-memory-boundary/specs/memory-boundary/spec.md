@@ -112,12 +112,21 @@ its own context and on VeraBrain durable memory.
 
 The initial consultation order is:
 
-1. Hermes uses its current session-local context and built-in memory for
-   the active interaction.
-2. Hermes calls VeraBrain bounded retrieval when the task requires
-   cross-session durable recall or a durable user/project memory lookup.
-3. Hermes uses the returned VeraBrain memory context as a complement to,
-   not a replacement for, its own active runtime context.
+1. Hermes checks whether its active session-local context or
+   Hermes-owned memory already answers the need.
+2. Hermes avoids calling VeraBrain when active-session or episodic
+   session-local recall is already sufficient.
+3. Hermes calls VeraBrain bounded retrieval only when the task requires
+   durable recall beyond the current session or a durable user/project
+   memory lookup.
+4. Hermes uses returned VeraBrain memory as a complement to, not a
+   replacement for, its own active runtime context.
+
+The initial consultation order therefore biases toward:
+
+- local Hermes context first
+- durable VeraBrain recall second
+- explicit bounded retrieval rather than default durable-memory lookup
 
 #### Scenario: Hermes can answer from active session context alone
 
@@ -126,12 +135,29 @@ The initial consultation order is:
 - **THEN** Hermes does not need to treat VeraBrain as the first source
   of truth for that interaction
 
+#### Scenario: Episodic session-local recall is sufficient
+
+- **WHEN** the needed information is recoverable from Hermes-owned
+  session history or active-session context
+- **THEN** Hermes does not escalate to VeraBrain durable retrieval by
+  default
+- **AND** VeraBrain is not treated as the first lookup layer for that
+  case
+
 #### Scenario: Hermes needs durable cross-session recall
 
 - **WHEN** the task depends on stable memory beyond the current session
 - **THEN** Hermes consults VeraBrain through the MCP-facing retrieval
   surface
 - **AND** VeraBrain complements Hermes context rather than replacing it
+
+#### Scenario: Returned VeraBrain memory does not replace active runtime context
+
+- **WHEN** Hermes receives bounded durable memory from VeraBrain
+- **THEN** Hermes continues to use its own active session context for
+  the current interaction
+- **AND** the returned durable memory is treated as an additional
+  context layer, not the sole source of truth
 
 ### Requirement: Define the initial promotion boundary
 
