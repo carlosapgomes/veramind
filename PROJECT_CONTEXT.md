@@ -159,6 +159,24 @@ Current project state:
 - The archived `memory-loop-mvp` change has end-to-end validation
   coverage for `saved_with_embedding`, `saved_without_embedding`, and
   `save_failed` through the MCP-facing loop
+- The completed `hermes-verabrain-memory-boundary` OpenSpec change is
+  now ready to be treated as archived baseline work
+- The archived `hermes-verabrain-memory-boundary` change defines the
+  initial authority model across `Hermes-owned`,
+  `promotion-candidate`, and `VeraBrain-owned` memory roles
+- The archived `hermes-verabrain-memory-boundary` change defines the
+  consultation order of `Hermes local context first`,
+  `VeraBrain durable retrieval second`
+- The archived `hermes-verabrain-memory-boundary` change defines
+  conservative promotion rules with `not-promotable-by-default` versus
+  `promotion-candidate` session material
+- The archived `hermes-verabrain-memory-boundary` change defines the
+  MCP-first interaction pattern through `search_memory`,
+  `get_context_bundle`, and `save_memory`
+- The archived `hermes-verabrain-memory-boundary` change has
+  integration checks showing that retrieval does not promote memory,
+  explicit `save_memory` does, and failed persistence does not transfer
+  durable authority
 
 ## Documentation Policy
 
@@ -193,30 +211,6 @@ Current project state:
 
 ## Likely Next Slices
 
-- Open and implement the `hermes-verabrain-memory-boundary` change on
-  top of the archived baseline
-
-Current active change:
-
-- `hermes-verabrain-memory-boundary`
-- The active `hermes-verabrain-memory-boundary` change now includes an
-  explicit design artifact for authority, consultation order, and
-  promotion boundaries
-- The active `hermes-verabrain-memory-boundary` change now defines the
-  initial authority model across `Hermes-owned`,
-  `promotion-candidate`, and `VeraBrain-owned` memory roles
-- The active `hermes-verabrain-memory-boundary` change now defines the
-  initial consultation order of `Hermes local context first`,
-  `VeraBrain durable retrieval second`
-- The active `hermes-verabrain-memory-boundary` change now defines
-  conservative promotion rules with `not-promotable-by-default` versus
-  `promotion-candidate` session material
-- The active `hermes-verabrain-memory-boundary` change now defines the
-  MCP-first interaction pattern for applying the boundary through
-  `search_memory`, `get_context_bundle`, and `save_memory`
-- The active `hermes-verabrain-memory-boundary` change now has
-  integration coverage showing that retrieval does not promote memory,
-  explicit `save_memory` does, and failed persistence does not transfer
-  durable authority
+- Open the next OpenSpec change on top of the archived baseline
 
 <!-- generated-by: project-context-maintainer -->
