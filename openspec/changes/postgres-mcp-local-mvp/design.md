@@ -110,20 +110,45 @@ Hermes should:
 The first local MVP must not depend on a Hermes-native plugin or skill
 to function.
 
+The minimum Hermes-side integration shape should be:
+
+- one explicit local MCP server entry for VeraBrain
+- a host command that starts the VeraBrain MCP server over `stdio`
+- explicit environment values for the VeraBrain runtime settings
+- no sharing of Hermes SQLite/session persistence as VeraBrain durable
+  storage
+
+This keeps the authority boundary intact:
+
+- Hermes remains the MCP client and owner of session-local memory
+- VeraBrain remains the MCP server and owner of durable memory
+
 ## Manual Smoke Workflow
 
 The minimum manual smoke workflow should prove:
 
 1. project-local Docker Compose Postgres is available
 2. VeraBrain can start from the host over the configured Postgres path
-3. the MCP server is reachable through its intended local `stdio`
-   runtime path
-4. a durable memory can be saved
-5. the saved memory can be retrieved in bounded form
+3. Hermes can launch or connect to the local VeraBrain MCP server over
+   `stdio`
+4. a durable memory can be saved through `save_memory`
+5. the saved memory can be retrieved in bounded form through
+   `search_memory` or `get_context_bundle`
 6. the observed behavior matches the archived memory-loop MVP outcomes
 
 The smoke workflow should be documented so a contributor can follow it
 without reverse engineering the codebase.
+
+The minimum smoke path should be documented as a short sequence:
+
+1. start Compose Postgres
+2. export or provide the runtime settings expected by the VeraBrain host
+   process
+3. configure Hermes with the local VeraBrain MCP server entry
+4. start Hermes with that MCP server enabled
+5. invoke one explicit durable save
+6. invoke one bounded retrieval
+7. confirm the returned behavior matches the local MVP expectation
 
 ## Failure and Fallback Paths
 

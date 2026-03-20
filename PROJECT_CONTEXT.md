@@ -223,5 +223,9 @@ Current project state:
   a dedicated Compose Postgres service with explicit credentials,
   host-visible port, project-scoped persistence, readiness signaling,
   and `pgvector` availability
+- The minimum Hermes-facing contract for that MVP is now fixed as one
+  explicit host-launched `stdio` MCP server entry with explicit runtime
+  env, plus a manual smoke path that proves `save_memory` and bounded
+  recall through Hermes
 
 <!-- generated-by: project-context-maintainer -->

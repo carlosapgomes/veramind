@@ -98,6 +98,19 @@ The initial MVP path MUST focus on MCP-first integration, MUST launch
 the VeraBrain MCP server from the host over `stdio`, and MUST NOT
 depend on a native Hermes plugin or Hermes skill to become runnable.
 
+The minimum Hermes-facing MCP configuration MUST define:
+
+- a local MCP server entry for VeraBrain using a host-launched command
+- the command arguments needed to start the VeraBrain MCP stdio process
+- the environment variables needed for runtime settings, including the
+  Postgres connection path
+- a contributor-visible server name so the MCP integration is explicit
+  in local setup
+
+The initial MVP path MUST treat Hermes as the MCP client and VeraBrain
+as the MCP server process. Hermes MUST NOT share its own memory store or
+database as the VeraBrain durable store.
+
 #### Scenario: Contributor points Hermes at the local VeraBrain MVP
 
 - **WHEN** a contributor configures Hermes to use the local VeraBrain
@@ -106,6 +119,14 @@ depend on a native Hermes plugin or Hermes skill to become runnable.
   `stdio` server process
 - **AND** the MVP can be exercised without introducing a native Hermes
   extension
+
+#### Scenario: Hermes launches VeraBrain as a local MCP server
+
+- **WHEN** Hermes starts the configured VeraBrain MCP server entry
+- **THEN** Hermes launches a host process that starts the VeraBrain MCP
+  stdio server
+- **AND** the VeraBrain process receives explicit runtime configuration
+  for the Compose-backed Postgres database
 
 ### Requirement: Define a manual smoke workflow for the MVP
 
@@ -116,14 +137,32 @@ The smoke workflow MUST at least cover:
 
 - starting the local persistence environment
 - starting the MCP-backed VeraBrain runtime
+- connecting Hermes to the configured VeraBrain MCP server
 - saving durable memory
 - retrieving bounded memory or a context bundle
+
+The minimum smoke workflow MUST make it possible to observe:
+
+- successful startup over the Compose-backed Postgres path
+- successful explicit durable save through `save_memory`
+- successful bounded recall through `search_memory` or
+  `get_context_bundle`
+- explicit failure when Postgres or MCP startup prerequisites are not
+  satisfied
 
 #### Scenario: Contributor runs the MVP smoke path manually
 
 - **WHEN** a contributor follows the documented local MVP workflow
 - **THEN** the contributor can manually observe the MVP memory loop
 - **AND** the observed path matches the archived memory-loop baseline
+
+#### Scenario: Contributor proves the local MVP through Hermes
+
+- **WHEN** a contributor runs the manual smoke workflow through Hermes
+- **THEN** the contributor can verify that Hermes can call the VeraBrain
+  MCP tools
+- **AND** the contributor can observe at least one durable save and one
+  bounded retrieval in the local MVP path
 
 ### Requirement: Keep local MVP scope intentionally narrow
 
