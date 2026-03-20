@@ -211,6 +211,7 @@ Current project state:
 
 ## Likely Next Slices
 
-- Open the next OpenSpec change on top of the archived baseline
+- Define and implement the `postgres-mcp-local-mvp` change as the first
+  practical local MVP run path
 
 <!-- generated-by: project-context-maintainer -->
