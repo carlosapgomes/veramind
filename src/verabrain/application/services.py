@@ -8,9 +8,11 @@ from typing import Callable, Mapping, Sequence
 from uuid import uuid4
 
 from .embeddings import (
+    EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY,
     EMBEDDING_ERROR_METADATA_KEY,
     EMBEDDING_STATUS_METADATA_KEY,
     MemoryEmbeddingCaptureResult,
+    resolve_deduplicated_embedding,
     MemoryEmbeddingProvider,
     resolve_memory_embedding,
 )
@@ -137,6 +139,10 @@ class MemoryApplicationService:
                     embedding_capture=embedding_capture,
                 ),
             )
+        deduplicated_embedding = resolve_deduplicated_embedding(
+            matched.embedding,
+            embedding_capture,
+        )
         return MemoryRecord(
             id=matched.id,
             text=request.text,
@@ -147,15 +153,12 @@ class MemoryApplicationService:
             updated_at=now,
             last_used_at=matched.last_used_at,
             source=request.source,
-            embedding=(
-                embedding_capture.embedding
-                if embedding_capture.embedding is not None
-                else matched.embedding
-            ),
+            embedding=deduplicated_embedding.embedding,
             metadata=self._build_metadata(
                 base_metadata=matched.metadata,
                 request_metadata=request.metadata,
                 embedding_capture=embedding_capture,
+                deduplication_action=deduplicated_embedding.action,
             ),
         )
 
@@ -170,11 +173,16 @@ class MemoryApplicationService:
         base_metadata: Mapping[str, object],
         request_metadata: Mapping[str, object],
         embedding_capture: MemoryEmbeddingCaptureResult,
+        deduplication_action: str | None = None,
     ) -> dict[str, object]:
         metadata: dict[str, object] = {}
         for source in (base_metadata, request_metadata):
             metadata.update(self._without_embedding_runtime_metadata(source))
         metadata.update(embedding_capture.metadata())
+        if deduplication_action is not None:
+            metadata[EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY] = (
+                deduplication_action
+            )
         return metadata
 
     def _without_embedding_runtime_metadata(
@@ -187,6 +195,7 @@ class MemoryApplicationService:
             not in {
                 EMBEDDING_STATUS_METADATA_KEY,
                 EMBEDDING_ERROR_METADATA_KEY,
+                EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY,
             }
         }
 

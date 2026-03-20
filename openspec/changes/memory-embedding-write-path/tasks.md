@@ -13,7 +13,7 @@
   provider is available
 - [x] Define fallback behavior when embedding generation is unavailable
   or fails
-- [ ] Preserve or replace embeddings explicitly when deduplicated memory
+- [x] Preserve or replace embeddings explicitly when deduplicated memory
   updates occur
 - [ ] Add unit tests for embedding-backed memory writes and fallback
   behavior

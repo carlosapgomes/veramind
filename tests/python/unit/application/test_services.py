@@ -8,6 +8,7 @@ import pytest
 from verabrain.application import (
     CaptureKnowledgeRequest,
     ContextBundleRequest,
+    EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY,
     EMBEDDING_ERROR_METADATA_KEY,
     EMBEDDING_STATUS_METADATA_KEY,
     ExecutionApplicationService,
@@ -362,6 +363,7 @@ def test_memory_service_replaces_embedding_when_duplicate_update_gets_new_one() 
     assert saved.embedding == (0.1, 0.2, 0.3)
     assert saved.metadata == {
         "origin": "existing",
+        EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY: "replaced",
         EMBEDDING_STATUS_METADATA_KEY: "generated",
     }
     assert provider.seen_texts == ["User prefers concise answers!"]
@@ -409,10 +411,54 @@ def test_memory_service_updates_existing_memory_when_duplicate_is_materially_the
     assert saved.metadata == {
         "origin": "updated",
         "keep": True,
+        EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY: "preserved",
         EMBEDDING_STATUS_METADATA_KEY: "unavailable",
     }
     assert memory_repository.saved == saved
     assert unit_of_work.commits == 1
+
+
+def test_memory_service_preserves_existing_embedding_when_duplicate_update_has_none() -> None:
+    unit_of_work = RecordingUnitOfWork()
+    memory_repository = cast(RecordingMemoryRepository, unit_of_work.memories)
+    existing = MemoryRecord(
+        id="mem-existing",
+        text="User prefers concise answers.",
+        type="preference",
+        scope="long",
+        salience=0.9,
+        created_at=datetime(2026, 3, 18, 12, 0, tzinfo=UTC),
+        updated_at=datetime(2026, 3, 18, 12, 0, tzinfo=UTC),
+        last_used_at=datetime(2026, 3, 18, 15, 0, tzinfo=UTC),
+        source="manual",
+        embedding=(7.0, 7.0),
+        metadata={"origin": "existing"},
+    )
+    memory_repository.similar_result = (existing,)
+    provider = NoneMemoryEmbeddingProvider()
+    service = MemoryApplicationService(
+        unit_of_work=unit_of_work,
+        clock=_now,
+        id_generator=lambda: "mem-new",
+        memory_embedding_provider=provider,
+    )
+
+    saved = service.save(
+        SaveMemoryRequest(
+            text="User prefers concise answers!",
+            type="preference",
+            scope="long",
+            source="manual",
+        )
+    )
+
+    assert saved.id == "mem-existing"
+    assert saved.embedding == (7.0, 7.0)
+    assert saved.metadata == {
+        "origin": "existing",
+        EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY: "preserved",
+        EMBEDDING_STATUS_METADATA_KEY: "unavailable",
+    }
 
 
 def test_memory_service_persists_without_embedding_when_provider_returns_none() -> None:

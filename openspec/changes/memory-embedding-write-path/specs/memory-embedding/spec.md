@@ -90,6 +90,15 @@ The initial policy MUST make it explicit whether the write path:
 
 The chosen behavior MUST be consistent and testable.
 
+The initial policy chooses:
+
+- `replaced` when deduplicated capture generates a new embedding
+- `preserved` when deduplicated capture has no new embedding because the
+  provider is unavailable, returns no embedding, or fails
+
+The write path MUST persist that action as explicit write-path metadata
+on the updated memory record.
+
 #### Scenario: Deduplicated memory update receives a new embedding
 
 - **WHEN** the write path updates an existing memory after duplicate

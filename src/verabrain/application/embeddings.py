@@ -7,7 +7,11 @@ from typing import Literal, Protocol
 
 EMBEDDING_STATUS_METADATA_KEY = "verabrain_embedding_status"
 EMBEDDING_ERROR_METADATA_KEY = "verabrain_embedding_error"
+EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY = (
+    "verabrain_embedding_deduplication_action"
+)
 MemoryEmbeddingStatus = Literal["generated", "unavailable", "failed"]
+MemoryEmbeddingDeduplicationAction = Literal["preserved", "replaced"]
 
 
 class MemoryEmbeddingProvider(Protocol):
@@ -34,6 +38,19 @@ class MemoryEmbeddingCaptureResult:
         return result
 
 
+@dataclass(frozen=True, slots=True)
+class MemoryEmbeddingDeduplicationResult:
+    """Resolved embedding decision for a deduplicated memory update."""
+
+    embedding: tuple[float, ...] | None
+    action: MemoryEmbeddingDeduplicationAction
+
+    def metadata(self) -> dict[str, object]:
+        """Return namespaced metadata for the deduplicated embedding action."""
+
+        return {EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY: self.action}
+
+
 def resolve_memory_embedding(
     text: str,
     provider: MemoryEmbeddingProvider | None,
@@ -52,3 +69,20 @@ def resolve_memory_embedding(
     if embedding is None:
         return MemoryEmbeddingCaptureResult(status="unavailable")
     return MemoryEmbeddingCaptureResult(status="generated", embedding=embedding)
+
+
+def resolve_deduplicated_embedding(
+    existing_embedding: tuple[float, ...] | None,
+    capture_result: MemoryEmbeddingCaptureResult,
+) -> MemoryEmbeddingDeduplicationResult:
+    """Make the deduplicated preserve-or-replace policy explicit."""
+
+    if capture_result.embedding is not None:
+        return MemoryEmbeddingDeduplicationResult(
+            embedding=capture_result.embedding,
+            action="replaced",
+        )
+    return MemoryEmbeddingDeduplicationResult(
+        embedding=existing_embedding,
+        action="preserved",
+    )

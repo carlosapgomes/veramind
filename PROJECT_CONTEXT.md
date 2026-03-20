@@ -128,6 +128,8 @@ Current project state:
   capture when a provider is available
 - The memory write path now persists explicit embedding fallback status
   when capture is unavailable or fails
+- Deduplicated memory updates now record whether embeddings were
+  preserved or replaced during write-side reconciliation
 
 ## Documentation Policy
 

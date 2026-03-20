@@ -1,6 +1,7 @@
 """Application layer for VeraBrain contracts and orchestration."""
 
 from .embeddings import (
+    EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY,
     EMBEDDING_ERROR_METADATA_KEY,
     EMBEDDING_STATUS_METADATA_KEY,
     MemoryEmbeddingCaptureResult,
@@ -54,6 +55,7 @@ __all__ = [
     "KnowledgeRecord",
     "KnowledgeRepository",
     "KnowledgeSearchQuery",
+    "EMBEDDING_DEDUPLICATION_ACTION_METADATA_KEY",
     "MemoryEmbeddingCaptureResult",
     "EMBEDDING_ERROR_METADATA_KEY",
     "EMBEDDING_STATUS_METADATA_KEY",
