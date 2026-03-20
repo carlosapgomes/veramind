@@ -156,6 +156,9 @@ Current project state:
 - The active `memory-loop-mvp` change now has an initial vertical
   integration slice over MCP adapter, application services, and
   in-memory infrastructure
+- The active `memory-loop-mvp` change now has end-to-end validation
+  coverage for `saved_with_embedding`, `saved_without_embedding`, and
+  `save_failed` through the MCP-facing loop
 
 ## Documentation Policy
 

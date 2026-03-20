@@ -18,4 +18,4 @@
 - [x] Add an initial vertical integration slice that proves the MVP
   memory loop through the relevant application, adapter, and
   infrastructure boundaries
-- [ ] Add end-to-end validation coverage for the MVP memory loop
+- [x] Add end-to-end validation coverage for the MVP memory loop
