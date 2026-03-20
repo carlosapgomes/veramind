@@ -216,5 +216,8 @@ Current project state:
 - Use the change design artifact to keep the local MVP work focused on
   the runnable `Compose Postgres -> host stdio MCP -> manual smoke`
   flow
+- The canonical startup order for that MVP is now fixed as
+  `Compose Postgres -> runtime settings -> schema bootstrap ->
+  Postgres application factory -> host stdio MCP server`
 
 <!-- generated-by: project-context-maintainer -->

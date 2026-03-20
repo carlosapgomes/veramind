@@ -15,6 +15,24 @@ through the MCP server surface.
 The canonical path MUST reuse the existing infrastructure bootstrap and
 MCP adapter boundaries rather than creating a parallel MVP-only runtime.
 
+The canonical startup sequence MUST be:
+
+1. ensure the project-local Docker Compose Postgres service is running
+2. construct explicit `PostgresRuntimeSettings`
+3. open a startup connection through infrastructure runtime wiring
+4. apply or verify schema state according to the configured migration
+   mode
+5. construct the `PostgresRuntimeApplicationFactory`
+6. build the `VeraBrainApplication`
+7. expose the application through the host-launched MCP stdio server
+
+The local MVP startup path MUST keep:
+
+- Compose-managed infrastructure concerns in the local environment layer
+- connection and schema bootstrap in infrastructure runtime wiring
+- application assembly in the Postgres application factory
+- MCP exposure in the MCP adapter/server layer
+
 #### Scenario: Contributor starts the local MVP
 
 - **WHEN** a contributor starts the local VeraBrain MVP
@@ -22,6 +40,15 @@ MCP adapter boundaries rather than creating a parallel MVP-only runtime.
   explicit runtime wiring
 - **AND** exposes the VeraBrain tool surface through the MCP server
   entrypoint
+
+#### Scenario: Local MVP startup follows the canonical sequence
+
+- **WHEN** a contributor follows the documented local startup path
+- **THEN** Postgres availability is established before application
+  assembly
+- **AND** schema bootstrap happens before MCP server startup
+- **AND** the host process starts the MCP server only after the
+  Postgres-backed application is ready
 
 ### Requirement: Define the minimum local persistence environment
 

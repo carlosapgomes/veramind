@@ -46,6 +46,23 @@ This preserves the existing boundary that operational wiring belongs to
 infrastructure bootstrap and not to application services or MCP tool
 semantics.
 
+The canonical local startup sequence is:
+
+1. start the project-local Docker Compose Postgres service
+2. load explicit runtime settings for the local VeraBrain process
+3. create a startup connection with `PostgresConnectionFactory`
+4. run `bootstrap_postgres_runtime_schema(...)`
+5. build the application through
+   `PostgresRuntimeApplicationFactory.create_application(...)`
+6. expose the application through the MCP server entrypoint on the host
+7. let Hermes launch or connect to that host process over `stdio`
+
+This ordering is intentional:
+
+- infrastructure readiness is checked before the MCP surface is exposed
+- schema handling stays out of MCP tool behavior
+- the MCP server never becomes responsible for implicit Postgres setup
+
 ## Local Infrastructure Assumptions
 
 The first local MVP should assume:
@@ -105,6 +122,14 @@ The local MVP should make these failure states observable:
 
 The change should prefer explicit startup and smoke-path failures over
 silent fallback into an unintended local mode.
+
+For the startup flow specifically:
+
+- Postgres startup failure should stop the local MVP before MCP startup
+- schema verification failure should stop the local MVP before MCP
+  startup
+- MCP dependency failure should stop the local MVP after application
+  assembly is attempted, not silently downgrade to a non-MCP mode
 
 ## Out of Scope
 
