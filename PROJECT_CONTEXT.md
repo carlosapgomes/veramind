@@ -130,6 +130,9 @@ Current project state:
   when capture is unavailable or fails
 - Deduplicated memory updates now record whether embeddings were
   preserved or replaced during write-side reconciliation
+- The memory embedding write path now has dedicated unit coverage for
+  embedding resolution, fallback status, and deduplicated action
+  metadata
 
 ## Documentation Policy
 
