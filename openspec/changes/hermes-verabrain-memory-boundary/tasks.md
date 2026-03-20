@@ -17,5 +17,5 @@
   a durable VeraBrain memory candidate
 - [x] Define the MCP-first interaction pattern that applies this
   boundary without requiring a native Hermes plugin
-- [ ] Add validation coverage or operational checks for the initial
+- [x] Add validation coverage or operational checks for the initial
   boundary policy once implemented

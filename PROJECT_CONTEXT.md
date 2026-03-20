@@ -214,5 +214,9 @@ Current active change:
 - The active `hermes-verabrain-memory-boundary` change now defines the
   MCP-first interaction pattern for applying the boundary through
   `search_memory`, `get_context_bundle`, and `save_memory`
+- The active `hermes-verabrain-memory-boundary` change now has
+  integration coverage showing that retrieval does not promote memory,
+  explicit `save_memory` does, and failed persistence does not transfer
+  durable authority
 
 <!-- generated-by: project-context-maintainer -->
