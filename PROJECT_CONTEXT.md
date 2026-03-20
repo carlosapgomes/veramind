@@ -120,8 +120,8 @@ Current project state:
   repository
 - Core-and-adapters architecture is now specified for the
   Hermes-centered path
-- A dedicated OpenSpec change now defines the next memory-embedding
-  write-path slice
+- The completed memory-embedding write-path OpenSpec change is now
+  ready to be treated as archived baseline work
 - The memory write path now has an explicit adapter-neutral embedding
   provider boundary for memory capture
 - The memory write path now attaches generated embeddings during
@@ -165,7 +165,6 @@ Current project state:
 
 ## Likely Next Slices
 
-- Implement the memory-embedding write-path change on top of the
-  archived baseline
+- Open the next OpenSpec change on top of the archived baseline
 
 <!-- generated-by: project-context-maintainer -->
