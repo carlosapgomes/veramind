@@ -27,6 +27,31 @@ The canonical flow is:
 
 This flow is the primary happy path the MVP must prove.
 
+## Canonical Happy Path
+
+The canonical observable happy path for this change is:
+
+1. Hermes calls the MCP-facing VeraBrain memory capture surface with a
+   durable memory candidate.
+2. The MCP adapter translates that payload into a VeraBrain memory
+   request without embedding provider or storage details leaking into
+   the tool contract.
+3. `MemoryApplicationService` classifies the input as a durable memory
+   candidate.
+4. The write path checks for materially matching existing memories.
+5. The write path resolves an embedding when a provider is available,
+   while preserving explicit fallback metadata if no embedding is
+   available.
+6. The resulting memory record is persisted durably through the
+   repository and unit-of-work boundary.
+7. Hermes later requests relevant memory context through the
+   MCP-facing retrieval surface.
+8. VeraBrain executes bounded retrieval and returns a small,
+   agent-consumable context payload.
+
+This is the exact flow the MVP must prove before scope expands into
+production hardening, broader knowledge work, or execution workflows.
+
 ## Layer Responsibilities
 
 ### MCP adapter
@@ -62,6 +87,7 @@ This flow is the primary happy path the MVP must prove.
 The MVP should be considered behaviorally proven only when all of the
 following are true:
 
+- Hermes can initiate the capture through the MCP-facing surface.
 - A durable capture can be persisted through the real write path.
 - The persisted record can carry an embedding when available.
 - The persisted record remains observable when embedding capture

@@ -144,6 +144,9 @@ Current project state:
   slice for the first observable end-to-end VeraBrain behavior
 - The active `memory-loop-mvp` change now includes an explicit design
   artifact for the canonical vertical memory loop
+- The active `memory-loop-mvp` change now defines the canonical happy
+  path for `capture -> classify -> deduplicate -> embed -> persist ->
+  retrieve -> expose via MCP`
 
 ## Documentation Policy
 

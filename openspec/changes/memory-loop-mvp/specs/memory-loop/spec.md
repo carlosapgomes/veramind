@@ -44,6 +44,24 @@ That happy path MUST include:
 - embedding generation when available
 - durable persistence of the resulting memory record
 - bounded retrieval by a later query
+- MCP-facing return of bounded memory context for Hermes consumption
+
+The canonical happy path for this MVP is:
+
+1. Hermes submits a durable memory-capture request through the
+   MCP-facing VeraBrain surface.
+2. The MCP adapter maps that request into the memory application
+   contract.
+3. The memory application service classifies the input into the memory
+   pipeline.
+4. The write path checks for materially similar existing memories.
+5. The write path resolves embedding capture using the configured
+   provider when available.
+6. VeraBrain persists the resulting memory record through the
+   unit-of-work and memory repository boundary.
+7. A later bounded query asks for relevant memory context.
+8. VeraBrain retrieves a bounded result set and returns it through the
+   MCP-facing surface in an agent-consumable shape.
 
 #### Scenario: Durable memory capture succeeds end to end
 
@@ -52,6 +70,16 @@ That happy path MUST include:
 - **THEN** the resulting memory record is stored durably
 - **AND** a later bounded query can retrieve it as relevant memory
   context
+- **AND** Hermes can consume that context through the MCP-facing
+  surface
+
+#### Scenario: Canonical happy path uses the existing write pipeline
+
+- **WHEN** contributors inspect the MVP happy path definition
+- **THEN** the path reuses the existing classification, duplicate
+  assessment, embedding, and persistence boundaries
+- **AND** the MVP does not invent a separate one-off flow just for the
+  happy path
 
 ### Requirement: Keep bounded retrieval as part of the MVP
 

@@ -9,7 +9,7 @@
 
 ## 2. Next implementation slices
 
-- [ ] Define the canonical observable happy path for
+- [x] Define the canonical observable happy path for
   `capture -> classify -> deduplicate -> embed -> persist -> retrieve`
 - [ ] Define the minimum MCP-facing bounded retrieval behavior the MVP
   must expose to Hermes
