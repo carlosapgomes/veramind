@@ -202,5 +202,8 @@ Current active change:
 - The active `hermes-verabrain-memory-boundary` change now includes an
   explicit design artifact for authority, consultation order, and
   promotion boundaries
+- The active `hermes-verabrain-memory-boundary` change now defines the
+  initial authority model across `Hermes-owned`,
+  `promotion-candidate`, and `VeraBrain-owned` memory roles
 
 <!-- generated-by: project-context-maintainer -->

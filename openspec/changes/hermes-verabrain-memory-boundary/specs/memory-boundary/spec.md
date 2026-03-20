@@ -19,6 +19,19 @@ context.
 VeraBrain MUST remain the owner of durable memories that are intended to
 survive across sessions and support later bounded retrieval.
 
+The initial authority model uses three practical categories:
+
+- `Hermes-owned`: active-session and runtime-operational context that
+  stays in Hermes memory
+- `VeraBrain-owned`: durable memories that have entered the VeraBrain
+  pipeline and been persisted there
+- `promotion-candidate`: information that may be valuable durably but
+  remains Hermes-owned until an explicit VeraBrain capture action occurs
+
+This model means durable-memory value alone is not enough to transfer
+authority. Authority transfers only when the VeraBrain capture path is
+invoked and persistence succeeds.
+
 #### Scenario: Contributor asks which system owns a memory kind
 
 - **WHEN** a contributor evaluates a memory behavior
@@ -26,6 +39,13 @@ survive across sessions and support later bounded retrieval.
   VeraBrain-owned
 - **AND** the same memory role is not treated as equally owned by both
   systems
+
+#### Scenario: Durable candidate has not been explicitly captured yet
+
+- **WHEN** a durable-looking fact appears during the active session
+- **AND** no explicit VeraBrain capture action has occurred yet
+- **THEN** it remains Hermes-owned as a promotion-candidate
+- **AND** VeraBrain is not yet treated as the authority for that fact
 
 ### Requirement: Define the initial Hermes-owned memory scope
 
@@ -37,6 +57,14 @@ later policy explicitly promotes them:
 - procedural or operational guidance already represented through Hermes
   mechanisms such as skills or bounded user modeling
 - transient conversational details that do not merit durable recall
+
+The initial authority model also treats the following as Hermes-owned
+even if they may later inspire durable capture:
+
+- emerging session observations not yet consolidated into durable facts
+- task-progress details and local execution state
+- "we just talked about this" episodic context recoverable through
+  Hermes session recall
 
 #### Scenario: Current conversational detail appears during an active session
 
@@ -59,12 +87,23 @@ candidates:
 Those candidates MAY still be rejected by the VeraBrain write pipeline
 when classification or validation says they should not be stored.
 
+Once explicitly captured and successfully persisted, those memories
+become VeraBrain-owned for durable recall purposes.
+
 #### Scenario: Durable preference should survive across sessions
 
 - **WHEN** a preference or durable fact is expected to help future
   sessions
 - **THEN** it is treated as a VeraBrain durable-memory candidate
 - **AND** VeraBrain remains the durable owner if it is persisted
+
+#### Scenario: Persisted durable memory becomes VeraBrain-owned
+
+- **WHEN** a durable candidate is explicitly captured through VeraBrain
+- **AND** the VeraBrain write path persists it successfully
+- **THEN** VeraBrain becomes the durable owner of that memory record
+- **AND** Hermes may still use the fact in-session without becoming the
+  durable authority
 
 ### Requirement: Define an initial consultation order
 

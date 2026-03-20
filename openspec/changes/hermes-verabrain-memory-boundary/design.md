@@ -20,6 +20,21 @@ The initial authority model is asymmetric by design:
 The purpose of this model is to avoid dual ownership of the same memory
 role.
 
+Operationally, the model has three states:
+
+- `Hermes-owned`
+- `promotion-candidate`
+- `VeraBrain-owned`
+
+`promotion-candidate` is intentionally not a third memory store. It is
+only a policy state meaning:
+
+- the information may deserve durable storage later
+- but Hermes still owns it until explicit VeraBrain capture succeeds
+
+This avoids accidental authority transfer just because something sounds
+important.
+
 ## Hermes-Owned Scope
 
 Hermes remains the owner of:
@@ -33,6 +48,12 @@ Hermes remains the owner of:
 This information may influence the current interaction without becoming
 durable VeraBrain memory.
 
+Hermes also remains the owner of:
+
+- session findings that have not yet been intentionally promoted
+- episodic recall from prior sessions
+- task-local state and temporary execution details
+
 ## VeraBrain-Owned Scope
 
 VeraBrain remains the owner of durable memory candidates such as:
@@ -45,6 +66,29 @@ VeraBrain remains the owner of durable memory candidates such as:
 These are still subject to VeraBrain classification, validation, and
 deduplication. Being a candidate does not mean the write path must
 persist it.
+
+Authority transfers to VeraBrain only after:
+
+1. explicit capture through the VeraBrain surface
+2. successful persistence through the VeraBrain write path
+
+Until then, the information remains Hermes-owned even if contributors
+expect it may later become durable memory.
+
+## Initial Authority Matrix
+
+The initial matrix is:
+
+- active conversation detail -> Hermes-owned
+- current task progress -> Hermes-owned
+- episodic "we discussed this before" recall -> Hermes-owned
+- stable preference not yet captured -> promotion-candidate under Hermes
+- durable project fact not yet captured -> promotion-candidate under
+  Hermes
+- persisted durable preference/fact/decision -> VeraBrain-owned
+
+This matrix is intentionally conservative. It biases toward keeping
+authority in Hermes until durable promotion is explicit.
 
 ## Consultation Order
 

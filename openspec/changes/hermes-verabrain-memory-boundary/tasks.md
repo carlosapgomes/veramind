@@ -9,7 +9,7 @@
 
 ## 2. Next implementation slices
 
-- [ ] Define the initial authority model for Hermes session memory
+- [x] Define the initial authority model for Hermes session memory
   versus VeraBrain durable memory
 - [ ] Define the consultation order Hermes should follow before calling
   VeraBrain durable memory retrieval
