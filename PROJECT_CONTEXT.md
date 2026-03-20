@@ -211,30 +211,15 @@ Current project state:
 
 ## Likely Next Slices
 
-- Define and implement the `postgres-mcp-local-mvp` change as the first
-  practical local MVP run path
-- Use the change design artifact to keep the local MVP work focused on
-  the runnable `Compose Postgres -> host stdio MCP -> manual smoke`
-  flow
-- The canonical startup order for that MVP is now fixed as
-  `Compose Postgres -> runtime settings -> schema bootstrap ->
-  Postgres application factory -> host stdio MCP server`
-- The minimum local infrastructure contract for that MVP is now fixed as
-  a dedicated Compose Postgres service with explicit credentials,
-  host-visible port, project-scoped persistence, readiness signaling,
-  and `pgvector` availability
-- The minimum Hermes-facing contract for that MVP is now fixed as one
-  explicit host-launched `stdio` MCP server entry with explicit runtime
-  env, plus a manual smoke path that proves `save_memory` and bounded
-  recall through Hermes
-- The project now exposes a first runnable local MVP launcher through
-  the `verabrain-mcp-local-mvp` Python entrypoint, reusing the existing
-  Postgres runtime wiring and MCP stdio server path
-- The local MVP change now has smoke-oriented integration coverage for
-  launcher startup, MCP tool exposure, durable save, bounded retrieval,
-  and bootstrap failure before server startup
-- The local MVP path now has a committed `docker-compose.yml`,
-  `.env.example`, and bilingual runbook documentation for manual setup
-  and Hermes MCP smoke execution
+- The `postgres-mcp-local-mvp` change is now archived as completed
+  baseline work
+- The archived local MVP baseline now includes the canonical
+  `Compose Postgres -> host stdio MCP -> manual smoke` path
+- The archived local MVP baseline now includes the
+  `verabrain-mcp-local-mvp` launcher, smoke-oriented integration
+  coverage, project-local Compose database assets, and bilingual
+  runbook documentation
+- Open the next OpenSpec change on top of the archived local MVP
+  baseline
 
 <!-- generated-by: project-context-maintainer -->
