@@ -97,7 +97,10 @@ def run_local_mvp(
     application = application_factory.create_application(
         memory_embedding_provider=_build_openai_memory_embedding_provider(
             embedding_settings
-        )
+        ),
+        memory_query_embedding_provider=_build_openai_query_embedding_provider(
+            embedding_settings
+        ),
     )
     run_stdio_server(
         application,
@@ -201,3 +204,12 @@ def _build_openai_memory_embedding_provider(
     if not settings.enabled:
         return None
     return OpenAIEmbeddingProvider(settings)
+
+
+def _build_openai_query_embedding_provider(
+    settings: OpenAIEmbeddingRuntimeSettings,
+):
+    provider = _build_openai_memory_embedding_provider(settings)
+    if provider is None:
+        return None
+    return provider.embed_query_text

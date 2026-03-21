@@ -24,6 +24,9 @@ class StubMemoryEmbeddingProvider(MemoryEmbeddingProvider):
     def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
         return (0.1, 0.2, 0.3)
 
+    def embed_query_text(self, text: str) -> tuple[float, ...] | None:
+        return (0.4, 0.5, 0.6)
+
 
 class RecordingMCPServer:
     def __init__(self, server_name: str, *, json_response: bool = True) -> None:
@@ -78,7 +81,11 @@ class StubRuntimeApplicationFactory:
         memory_embedding_provider=None,
         memory_query_embedding_provider=None,
     ) -> VeraBrainApplication:
-        del memory_embedding_provider, memory_query_embedding_provider
+        self.application.memory.memory_embedding_provider = memory_embedding_provider
+        self.application.memory_query_embedding_provider = memory_query_embedding_provider
+        self.application.context.memory_query_embedding_provider = (
+            memory_query_embedding_provider
+        )
         return self.application
 
 
@@ -130,6 +137,8 @@ def test_local_mvp_launcher_exposes_mcp_tools_for_smoke_flow(
         env={
             "VERABRAIN_POSTGRES_DSN": "postgresql://verabrain:test@localhost/verabrain",
             "VERABRAIN_MCP_SERVER_NAME": "VeraBrain Local",
+            "VERABRAIN_OPENAI_API_KEY": "test-key",
+            "VERABRAIN_OPENAI_EMBEDDING_MODEL": "text-embedding-3-small",
         },
         server_factory=server_factory,
     )
@@ -138,6 +147,7 @@ def test_local_mvp_launcher_exposes_mcp_tools_for_smoke_flow(
     assert len(bootstrap_calls) == 1
     assert startup_connection.closed is True
     assert len(created_servers) == 1
+    assert application.context.memory_query_embedding_provider is not None
     server = created_servers[0]
     assert server.server_name == "VeraBrain Local"
     assert server.transports == ["stdio"]

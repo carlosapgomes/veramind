@@ -14,7 +14,7 @@
       boundary at the infrastructure edge
 - [x] Wire OpenAI-backed memory write embeddings into the local MVP
       application assembly
-- [ ] Wire OpenAI-backed query embeddings into memory retrieval for the
+- [x] Wire OpenAI-backed query embeddings into memory retrieval for the
       local MVP path
 - [ ] Document runtime env vars, fallback behavior, and local MVP usage
       with OpenAI embeddings

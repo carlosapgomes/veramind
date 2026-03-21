@@ -34,6 +34,9 @@ class FakeMemoryEmbeddingProvider:
     def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
         return (0.1, 0.2) if text else None
 
+    def embed_query_text(self, text: str) -> tuple[float, ...] | None:
+        return (0.3, 0.4) if text else None
+
 
 def test_load_local_mvp_settings_prefers_dsn_configuration() -> None:
     settings = load_local_mvp_settings(
@@ -154,6 +157,7 @@ def test_run_local_mvp_bootstraps_schema_and_starts_stdio_server(
     assert bootstrap_calls[0][0] is startup_connection
     assert server_calls[0][1] == "VeraBrain Local"
     assert server_calls[0][0].memory.memory_embedding_provider is not None
+    assert server_calls[0][0].context.memory_query_embedding_provider is not None
     assert startup_connection.closed is True
 
 
@@ -183,6 +187,7 @@ def test_run_local_mvp_keeps_memory_write_embeddings_disabled_without_openai_con
 
     assert exit_code == 0
     assert server_calls[0][0].memory.memory_embedding_provider is None
+    assert server_calls[0][0].context.memory_query_embedding_provider is None
 
 
 def test_run_local_mvp_fails_when_startup_connection_is_unavailable() -> None:
