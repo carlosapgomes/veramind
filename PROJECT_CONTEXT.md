@@ -214,6 +214,9 @@ Current project state:
 - The `openai-embedding-runtime-integration` change is now active to
   make the local MVP use a real embedding provider instead of the
   current `unavailable` fallback path
+- The active OpenAI embedding change now includes a design artifact for
+  wiring provider-backed write and query embeddings into the local MVP
+  without leaking provider details into core or application contracts
 - The next implementation slices should define the OpenAI runtime
   settings surface, wire provider-backed write/query embeddings into the
   local MVP path, and document the required env vars
