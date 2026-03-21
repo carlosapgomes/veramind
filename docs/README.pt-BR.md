@@ -12,6 +12,11 @@ outros documentos duráveis do projeto.
 - `docs/runbooks/`: Runbooks práticos para caminhos locais e operacionais
 - `docs/releases/`: Evidências de release e notas associadas
 
+Runbooks atuais:
+
+- `local-mvp.md`
+- `hermes-verabrain-skill.md`
+
 ## Regra bilíngue
 
 - Os documentos em inglês são a fonte padrão.

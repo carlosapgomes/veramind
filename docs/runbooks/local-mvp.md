@@ -129,6 +129,13 @@ Expected outcomes:
 - Hermes consumes VeraBrain recall through MCP without replacing its own
   session-local memory behavior
 
+## 7. Optional Skill Layer
+
+If you want Hermes to load explicit procedural guidance for VeraBrain
+usage, install the MVP skill too:
+
+- [Hermes VeraBrain Skill Runbook](./hermes-verabrain-skill.md)
+
 ## Troubleshooting
 
 ### Postgres is not reachable

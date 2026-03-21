@@ -237,5 +237,8 @@ Current project state:
 - The repository now contains an initial Hermes `VeraBrain` skill
   artifact under `hermes-skills/verabrain/` for MVP usage guidance over
   the MCP tool surface
+- The Hermes-facing MVP usage path now has bilingual runbook coverage
+  for installing and using the `VeraBrain` skill, plus integration
+  checks that keep the skill and runbooks aligned with the MCP surface
 
 <!-- generated-by: project-context-maintainer -->

@@ -16,6 +16,7 @@ O primeiro caminho prático de MVP agora tem:
 Runbook:
 
 - [Runbook do MVP Local](./docs/runbooks/local-mvp.pt-BR.md)
+- [Runbook do Skill Hermes VeraBrain](./docs/runbooks/hermes-verabrain-skill.pt-BR.md)
 
 ## Fluxo de trabalho
 

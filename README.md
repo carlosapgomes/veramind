@@ -16,6 +16,7 @@ The first practical MVP path now has:
 Runbook:
 
 - [Local MVP Runbook](./docs/runbooks/local-mvp.md)
+- [Hermes VeraBrain Skill Runbook](./docs/runbooks/hermes-verabrain-skill.md)
 
 ## Workflow
 

@@ -12,6 +12,11 @@ other durable project documents.
 - `docs/runbooks/`: Practical runbooks for local and operational paths
 - `docs/releases/`: Release evidence and release-oriented notes
 
+Current runbooks:
+
+- `local-mvp.md`
+- `hermes-verabrain-skill.md`
+
 ## Bilingual Rule
 
 - English documents are the default source.

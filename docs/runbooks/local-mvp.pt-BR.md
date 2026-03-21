@@ -130,6 +130,13 @@ Resultados esperados:
 - o Hermes consome o recall do VeraBrain via MCP sem substituir seu
   próprio comportamento de memória local de sessão
 
+## 7. Camada opcional de skill
+
+Se você quiser que o Hermes carregue orientação procedural explícita
+para uso do VeraBrain, instale também o skill do MVP:
+
+- [Runbook do Skill Hermes VeraBrain](./hermes-verabrain-skill.pt-BR.md)
+
 ## Troubleshooting
 
 ### O Postgres não está acessível
