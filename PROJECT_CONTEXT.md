@@ -234,5 +234,8 @@ Current project state:
 - The role of the future Hermes `VeraBrain` skill is now fixed as a
   procedural mapper from decision classes to the existing VeraBrain MCP
   tools, not as a new source of memory policy
+- The repository now contains an initial Hermes `VeraBrain` skill
+  artifact under `hermes-skills/verabrain/` for MVP usage guidance over
+  the MCP tool surface
 
 <!-- generated-by: project-context-maintainer -->

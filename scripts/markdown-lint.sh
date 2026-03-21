@@ -15,6 +15,7 @@ mapfile -d '' files < <(find . -type f -name '*.md' \
   -not -path './.pi/*' \
   -not -path './.codex/*' \
   -not -path './.git/*' \
+  -not -path './hermes-skills/*' \
   -not -path './texts/*' \
   -print0)
 

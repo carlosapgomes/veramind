@@ -15,6 +15,6 @@
   durable save and bounded recall
 - [x] Define the role of the Hermes `VeraBrain` skill relative to the
   existing MCP tools
-- [ ] Add the initial Hermes `VeraBrain` skill artifact for MVP usage
+- [x] Add the initial Hermes `VeraBrain` skill artifact for MVP usage
 - [ ] Add the first integration and documentation coverage for the
   Hermes-facing MVP usage path
