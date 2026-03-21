@@ -211,6 +211,11 @@ Current project state:
 
 ## Likely Next Slices
 
+- The `mcp-argument-compatibility` change is now active to isolate the
+  Hermes-facing MCP argument-shape bugfix
+- The next implementation slice should normalize optional top-level
+  `kwargs` wrapping at the VeraBrain MCP adapter boundary while keeping
+  direct MCP arguments canonical
 - The `postgres-mcp-local-mvp` change is now archived as completed
   baseline work
 - The archived local MVP baseline now includes the canonical
