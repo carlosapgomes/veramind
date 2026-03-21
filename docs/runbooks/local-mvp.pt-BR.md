@@ -46,6 +46,17 @@ OpenAI embeddings usadas pelo caminho atual do MVP local:
 - `VERABRAIN_OPENAI_EMBEDDING_MODEL`
 - `VERABRAIN_OPENAI_BASE_URL`
 
+Para o uso padrão com OpenAI:
+
+- defina `VERABRAIN_OPENAI_API_KEY`
+- mantenha `VERABRAIN_OPENAI_EMBEDDING_MODEL=text-embedding-3-small`
+- deixe `VERABRAIN_OPENAI_BASE_URL` vazio para que o SDK da OpenAI use
+  o endpoint padrão da API
+
+Só defina `VERABRAIN_OPENAI_BASE_URL` se você quiser usar
+intencionalmente um proxy ou um endpoint alternativo compatível com a
+OpenAI.
+
 Se `VERABRAIN_OPENAI_API_KEY` ficar vazio, o MVP local continua
 funcionando, mas cai para retrieval lexical-only e gravações sem
 embeddings.
@@ -259,6 +270,8 @@ Verifique:
   do MCP no Hermes
 - se `VERABRAIN_OPENAI_EMBEDDING_MODEL` aponta para um modelo de
   embedding válido
+- se `VERABRAIN_OPENAI_BASE_URL` está vazio para o uso padrão da OpenAI
+  ou aponta intencionalmente para um endpoint compatível
 - se o processo MCP do VeraBrain foi reiniciado após mudar as env vars
 
 Se OpenAI estiver indisponível ou mal configurado, o VeraBrain faz
@@ -270,6 +283,8 @@ Verifique:
 
 - se a chave de API da OpenAI está configurada
 - se o nome do modelo de embedding é válido
+- se o base URL está vazio para o endpoint padrão da OpenAI, a menos
+  que você esteja usando intencionalmente um proxy
 - se o processo MCP do VeraBrain consegue alcançar a API da OpenAI
 
 Se a chamada ao provider falhar, o write path continua sobrevivente e

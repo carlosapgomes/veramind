@@ -46,6 +46,16 @@ settings used by the current local MVP path:
 - `VERABRAIN_OPENAI_EMBEDDING_MODEL`
 - `VERABRAIN_OPENAI_BASE_URL`
 
+For standard OpenAI usage:
+
+- set `VERABRAIN_OPENAI_API_KEY`
+- keep `VERABRAIN_OPENAI_EMBEDDING_MODEL=text-embedding-3-small`
+- leave `VERABRAIN_OPENAI_BASE_URL` blank so the OpenAI SDK uses its
+  default API endpoint
+
+Only set `VERABRAIN_OPENAI_BASE_URL` when you intentionally want to use
+a proxy or an OpenAI-compatible alternative endpoint.
+
 If `VERABRAIN_OPENAI_API_KEY` is left empty, the local MVP keeps working
 but falls back to lexical-only retrieval and memory writes without
 embeddings.
@@ -249,6 +259,8 @@ Check:
 
 - `VERABRAIN_OPENAI_API_KEY` is present in `.env` or Hermes MCP env
 - `VERABRAIN_OPENAI_EMBEDDING_MODEL` is set to a valid embedding model
+- `VERABRAIN_OPENAI_BASE_URL` is blank for standard OpenAI usage, or
+  intentionally points to a compatible endpoint
 - the local MVP process was restarted after changing env vars
 
 If OpenAI is unavailable or misconfigured, VeraBrain intentionally
@@ -260,6 +272,8 @@ Check:
 
 - the OpenAI API key is configured
 - the embedding model name is valid
+- the base URL is blank for the default OpenAI endpoint, unless you are
+  intentionally using a proxy
 - the VeraBrain MCP process can reach the OpenAI API
 
 If the provider request fails, the write path remains survivable and
