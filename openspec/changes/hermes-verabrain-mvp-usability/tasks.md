@@ -11,7 +11,7 @@
 
 - [x] Define the initial usability policy for when Hermes should consult
   VeraBrain versus rely on its own memory layers
-- [ ] Define the initial explicit user-intent phrases and behaviors for
+- [x] Define the initial explicit user-intent phrases and behaviors for
   durable save and bounded recall
 - [ ] Define the role of the Hermes `VeraBrain` skill relative to the
   existing MCP tools

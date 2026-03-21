@@ -111,21 +111,49 @@ Its role should not be:
 
 The usability design should focus first on strong, explicit patterns.
 
-Examples of durable-save intent:
+The initial intent model should be grouped into:
+
+- `durable-save intents`
+- `durable-recall intents`
+- `stay-local by default`
+
+### `durable-save intents`
+
+These should map to `save-to-verabrain`.
+
+Examples:
 
 - “remember this”
 - “register this idea/project/decision”
 - “save this in VeraBrain”
 - “keep this for later”
 
-Examples of durable-recall intent:
+### `durable-recall intents`
+
+These should map to `retrieve-from-verabrain`.
+
+Examples:
 
 - “what do I already know about X?”
 - “check VeraBrain for this topic”
 - “bring back context about this project”
 - “recover what we stored about this”
 
-The MVP should prefer strong explicit signals over subtle inference.
+### `stay-local by default`
+
+These should remain in `stay-local` unless other strong signals are
+present.
+
+Examples:
+
+- “what were we doing just now?”
+- “continue this task”
+- “summarize the last few messages”
+- “what did you just tell me?”
+
+The MVP should prefer strong explicit signals over subtle inference, and
+the skill should preserve this mapping rather than improvising broader
+capture behavior.
 
 ## Failure and Non-Use Cases
 

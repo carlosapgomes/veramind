@@ -229,5 +229,7 @@ Current project state:
 - The initial usability policy is now fixed around three conservative
   decision classes: `stay-local`, `retrieve-from-verabrain`, and
   `save-to-verabrain`
+- The explicit MVP intent mapping is now fixed around `durable-save
+  intents`, `durable-recall intents`, and `stay-local by default`
 
 <!-- generated-by: project-context-maintainer -->

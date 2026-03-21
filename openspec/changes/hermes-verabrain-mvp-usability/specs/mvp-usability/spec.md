@@ -87,6 +87,19 @@ interaction patterns that should strongly signal:
 The initial design MUST NOT rely on silent or overly aggressive durable
 capture.
 
+The initial MVP usability layer MUST define two explicit intent groups:
+
+- `durable-save intents`
+- `durable-recall intents`
+
+The initial mapping from intent to behavior MUST be:
+
+- `durable-save intents` -> `save-to-verabrain`
+- `durable-recall intents` -> `retrieve-from-verabrain`
+
+The project MUST also define examples of requests that remain
+`stay-local`, so contributors do not over-apply VeraBrain.
+
 #### Scenario: User explicitly asks Hermes to save durable memory
 
 - **WHEN** the user asks Hermes to remember, register, or save something
@@ -94,6 +107,22 @@ capture.
 - **THEN** the usability layer treats that as a strong signal to use the
   VeraBrain save path
 - **AND** the resulting behavior remains explicit and observable
+
+#### Scenario: User explicitly asks Hermes to retrieve durable memory
+
+- **WHEN** the user asks what is already stored, remembered, or known in
+  VeraBrain about a topic, project, or prior saved context
+- **THEN** the usability layer treats that as a strong signal to use the
+  VeraBrain bounded retrieval path
+- **AND** the resulting behavior remains bounded and observable
+
+#### Scenario: User request remains local by default
+
+- **WHEN** the user request only concerns the current session,
+  immediate task progress, or normal conversational continuity
+- **THEN** the usability layer keeps Hermes in the `stay-local`
+  decision class
+- **AND** the request does not escalate into VeraBrain usage by default
 
 ### Requirement: Define the role of a Hermes VeraBrain skill
 
