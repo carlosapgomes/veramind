@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import cast
 
 import pytest
@@ -12,6 +13,9 @@ from verabrain.infrastructure import (
 from verabrain.infrastructure.postgres_runtime import PostgresConnector
 from verabrain.runtime.local_mvp import (
     LocalMVPStartupError,
+    LocalMVPCliOptions,
+    _configure_logging,
+    _parse_cli_args,
     load_local_mvp_openai_embedding_settings,
     load_local_mvp_settings,
     main,
@@ -210,11 +214,45 @@ def test_main_reports_startup_errors(
 ) -> None:
     monkeypatch.setattr(
         "verabrain.runtime.local_mvp.run_local_mvp",
-        lambda: (_ for _ in ()).throw(LocalMVPStartupError("startup failed")),
+        lambda *, debug=False: (_ for _ in ()).throw(LocalMVPStartupError("startup failed")),
     )
 
     result = main()
 
     captured = capsys.readouterr()
     assert result == 1
-    assert captured.err.strip() == "startup failed"
+    assert "Local MVP startup failed" in captured.err
+    assert captured.err.strip().endswith("startup failed")
+
+
+def test_parse_cli_args_enables_debug_mode() -> None:
+    options = _parse_cli_args(["--debug"])
+
+    assert options == LocalMVPCliOptions(debug=True)
+
+
+def test_main_passes_debug_mode_to_runtime(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[bool] = []
+
+    monkeypatch.setattr(
+        "verabrain.runtime.local_mvp._configure_logging",
+        lambda *, debug: calls.append(debug),
+    )
+    monkeypatch.setattr(
+        "verabrain.runtime.local_mvp.run_local_mvp",
+        lambda *, debug=False: calls.append(debug) or 0,
+    )
+
+    result = main(["--debug"])
+
+    assert result == 0
+    assert calls == [True, True]
+
+
+def test_configure_logging_sets_debug_level_for_debug_mode() -> None:
+    _configure_logging(debug=True)
+
+    logger = logging.getLogger("verabrain.runtime.local_mvp")
+    assert logger.isEnabledFor(logging.DEBUG)

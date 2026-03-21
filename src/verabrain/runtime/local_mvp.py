@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import argparse
+import logging
 import os
 import sys
 from collections.abc import Mapping
-from typing import Any, Protocol, cast
+from dataclasses import dataclass
+from typing import Any, Protocol, Sequence, cast
 
 from verabrain.adapters.mcp import run_stdio_server
 from verabrain.infrastructure import (
@@ -23,6 +26,7 @@ from verabrain.infrastructure.postgres_runtime import PostgresConnector
 DEFAULT_SERVER_NAME = "VeraBrain"
 DEFAULT_MIGRATION_MODE: PostgresMigrationMode = "apply"
 DEFAULT_FAIL_FAST = True
+LOGGER = logging.getLogger(__name__)
 
 
 class ClosableConnection(Protocol):
@@ -34,6 +38,13 @@ class ClosableConnection(Protocol):
 
 class LocalMVPStartupError(RuntimeError):
     """Raised when the local MVP launcher cannot start cleanly."""
+
+
+@dataclass(frozen=True, slots=True)
+class LocalMVPCliOptions:
+    """Parsed CLI options for the local MVP launcher."""
+
+    debug: bool = False
 
 
 def load_local_mvp_settings(
@@ -69,6 +80,7 @@ def run_local_mvp(
     env: Mapping[str, str] | None = None,
     connector: PostgresConnector | None = None,
     server_factory: Any | None = None,
+    debug: bool = False,
 ) -> int:
     """Start the host-launched local MVP path over stdio."""
 
@@ -76,6 +88,18 @@ def run_local_mvp(
     settings = load_local_mvp_settings(source)
     embedding_settings = load_local_mvp_openai_embedding_settings(source)
     server_name = _clean(source.get("VERABRAIN_MCP_SERVER_NAME")) or DEFAULT_SERVER_NAME
+    LOGGER.debug(
+        "Starting local MVP debug=%s server_name=%s dsn_configured=%s host=%s dbname=%s "
+        "migration_mode=%s embeddings_enabled=%s model=%s",
+        debug,
+        server_name,
+        settings.dsn is not None,
+        settings.connection_kwargs.get("host"),
+        settings.connection_kwargs.get("dbname"),
+        settings.migration_mode,
+        embedding_settings.enabled,
+        embedding_settings.model,
+    )
     application_factory = PostgresRuntimeApplicationFactory.from_settings(
         settings,
         connector=connector,
@@ -110,12 +134,15 @@ def run_local_mvp(
     return 0
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     """Console entrypoint for the local VeraBrain MVP launcher."""
 
+    options = _parse_cli_args(sys.argv[1:] if argv is None else argv)
+    _configure_logging(debug=options.debug)
     try:
-        return run_local_mvp()
+        return run_local_mvp(debug=options.debug)
     except (LocalMVPStartupError, PostgresRuntimeConfigurationError) as exc:
+        LOGGER.exception("Local MVP startup failed")
         print(str(exc), file=sys.stderr)
         return 1
 
@@ -213,3 +240,22 @@ def _build_openai_query_embedding_provider(
     if provider is None:
         return None
     return provider.embed_query_text
+
+
+def _parse_cli_args(argv: Sequence[str]) -> LocalMVPCliOptions:
+    parser = argparse.ArgumentParser(prog="verabrain-mcp-local-mvp")
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable VeraBrain debug logging for local MCP startup and tool dispatch.",
+    )
+    namespace = parser.parse_args(list(argv))
+    return LocalMVPCliOptions(debug=bool(namespace.debug))
+
+
+def _configure_logging(*, debug: bool) -> None:
+    logging.basicConfig(
+        level=logging.DEBUG if debug else logging.WARNING,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        force=True,
+    )

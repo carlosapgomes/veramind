@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Callable, Mapping, cast
 
 import pytest
@@ -146,3 +147,29 @@ def test_run_stdio_server_uses_stdio_transport(monkeypatch: pytest.MonkeyPatch) 
 
     assert result is server
     assert server.transport_runs == ["stdio"]
+
+
+def test_run_stdio_server_emits_debug_startup_logs(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog,
+) -> None:
+    server = FakeMCPServer("VeraBrain")
+
+    def fake_create_mcp_server(
+        application: VeraBrainApplication,
+        *,
+        server_name: str = "VeraBrain",
+        server_factory=None,
+    ) -> FakeMCPServer:
+        return server
+
+    monkeypatch.setattr(
+        "verabrain.adapters.mcp.server.create_mcp_server",
+        fake_create_mcp_server,
+    )
+
+    with caplog.at_level(logging.DEBUG, logger="verabrain.adapters.mcp.server"):
+        run_stdio_server(cast(VeraBrainApplication, object()))
+
+    assert "Starting VeraBrain MCP server over stdio" in caplog.text
+    assert "is running over stdio" in caplog.text

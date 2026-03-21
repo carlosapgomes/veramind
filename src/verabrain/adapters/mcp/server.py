@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Callable, Mapping, Protocol, cast
 
@@ -12,6 +13,7 @@ from .handlers import MCPApplicationAdapter
 MCPResponse = dict[str, object]
 ToolDefinition = Mapping[str, object]
 ToolHandler = Callable[[Mapping[str, object]], MCPResponse]
+LOGGER = logging.getLogger(__name__)
 
 
 class MCPAdapterProtocol(Protocol):
@@ -128,6 +130,11 @@ def build_mcp_server(
     server = factory(definition.name, json_response=True)
     for tool in definition.tools:
         _register_tool(server, tool)
+    LOGGER.debug(
+        "Built MCP server '%s' with tools=%s",
+        definition.name,
+        [tool.name for tool in definition.tools],
+    )
     return server
 
 
@@ -139,12 +146,14 @@ def run_stdio_server(
 ) -> MCPServerProtocol:
     """Run the VeraBrain MCP server over stdio transport."""
 
+    LOGGER.debug("Starting VeraBrain MCP server over stdio as '%s'", server_name)
     server = create_mcp_server(
         application,
         server_name=server_name,
         server_factory=server_factory,
     )
     server.run(transport="stdio")
+    LOGGER.debug("VeraBrain MCP server '%s' is running over stdio", server_name)
     return server
 
 

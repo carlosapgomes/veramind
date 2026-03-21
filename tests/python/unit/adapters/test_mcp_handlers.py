@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime
 from typing import Sequence, cast
 
@@ -178,6 +179,27 @@ def test_dispatch_routes_save_memory_to_the_application_service() -> None:
     result = cast(dict[str, object], response["result"])
     assert result["id"] == "fixed-id"
     assert unit_of_work.commits == 1
+
+
+def test_dispatch_emits_debug_logs_for_tool_execution(
+    caplog,
+) -> None:
+    adapter, _ = _build_adapter()
+
+    with caplog.at_level(logging.DEBUG, logger="verabrain.adapters.mcp.handlers"):
+        response = adapter.dispatch(
+            "save_memory",
+            {
+                "text": "User prefers concise answers.",
+                "type": "preference",
+                "scope": "long",
+                "source": "manual",
+            },
+        )
+
+    assert response["ok"] is True
+    assert "Dispatching MCP tool 'save_memory'" in caplog.text
+    assert "completed successfully" in caplog.text
 
 
 def test_dispatch_unwraps_top_level_kwargs_for_compatibility() -> None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Callable, Mapping
 
@@ -26,6 +27,7 @@ from .mappings import (
 from .schemas import INITIAL_MCP_TOOLS
 
 ToolHandler = Callable[[Mapping[str, object]], dict[str, object]]
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -52,19 +54,32 @@ class MCPApplicationAdapter:
             )
 
         try:
-            result = handler(_normalize_mcp_args(args))
+            normalized_args = _normalize_mcp_args(args)
+            LOGGER.debug(
+                "Dispatching MCP tool '%s' with args=%s",
+                tool_name,
+                _summarize_args(normalized_args),
+            )
+            result = handler(normalized_args)
         except ValueError as exc:
+            LOGGER.debug(
+                "MCP tool '%s' rejected invalid arguments: %s",
+                tool_name,
+                str(exc),
+            )
             return self._error(
                 tool_name=tool_name,
                 code="invalid_arguments",
                 message=str(exc),
             )
         except Exception as exc:  # pragma: no cover - exercised through adapter users
+            LOGGER.exception("MCP tool '%s' failed with application error", tool_name)
             return self._error(
                 tool_name=tool_name,
                 code="application_error",
                 message=str(exc),
             )
+        LOGGER.debug("MCP tool '%s' completed successfully", tool_name)
         return {"ok": True, "tool": tool_name, "result": result}
 
     def _handlers(self) -> dict[str, ToolHandler]:
@@ -143,3 +158,23 @@ def _normalize_mcp_args(args: Mapping[str, object]) -> Mapping[str, object]:
     if not isinstance(kwargs, Mapping):
         raise ValueError("'kwargs' must be an object when provided")
     return {str(key): value for key, value in kwargs.items()}
+
+
+def _summarize_args(args: Mapping[str, object]) -> dict[str, object]:
+    summary: dict[str, object] = {}
+    for key, value in args.items():
+        if key in {"api_key", "authorization", "token"}:
+            summary[str(key)] = "<redacted>"
+            continue
+        if key == "text" and isinstance(value, str):
+            compact = " ".join(value.split())
+            summary[str(key)] = compact[:80] + ("..." if len(compact) > 80 else "")
+            continue
+        if key == "query_embedding":
+            summary[str(key)] = "<embedding>"
+            continue
+        if isinstance(value, Mapping):
+            summary[str(key)] = f"<object:{len(value)}>"
+            continue
+        summary[str(key)] = value
+    return summary

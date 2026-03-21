@@ -211,6 +211,10 @@ Current project state:
 
 ## Likely Next Slices
 
+- The `mcp-debug-observability` change is now active to make the local
+  VeraBrain MCP process emit first-party debug logs when requested
+- The next implementation slice should document how to enable the new
+  debug mode from the launcher and Hermes MCP configuration
 - The `openai-embedding-runtime-integration` change is now active to
   make the local MVP use a real embedding provider instead of the
   current `unavailable` fallback path
