@@ -5,6 +5,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Callable, Mapping, Protocol, Sequence
 
+from psycopg.types.json import Jsonb
+
 from verabrain.application import (
     ExecutionQuery,
     ExecutionRecord,
@@ -599,7 +601,7 @@ def _memory_record_params(record: MemoryRecord) -> dict[str, object]:
         "last_used_at": record.last_used_at,
         "source": record.source,
         "embedding": list(record.embedding) if record.embedding else None,
-        "metadata": dict(record.metadata),
+        "metadata": _jsonb_metadata(record.metadata),
     }
 
 
@@ -612,7 +614,7 @@ def _knowledge_record_params(record: KnowledgeRecord) -> dict[str, object]:
         "created_at": record.created_at,
         "updated_at": record.updated_at,
         "source": record.source,
-        "metadata": dict(record.metadata),
+        "metadata": _jsonb_metadata(record.metadata),
     }
 
 
@@ -623,7 +625,7 @@ def _knowledge_link_params(link: KnowledgeLinkRecord) -> dict[str, object]:
         "right_id": link.right_id,
         "relation": link.relation,
         "created_at": link.created_at,
-        "metadata": dict(link.metadata),
+        "metadata": _jsonb_metadata(link.metadata),
     }
 
 
@@ -639,8 +641,12 @@ def _execution_record_params(record: ExecutionRecord) -> dict[str, object]:
         "project_id": record.project_id,
         "due_at": record.due_at,
         "review_at": record.review_at,
-        "metadata": dict(record.metadata),
+        "metadata": _jsonb_metadata(record.metadata),
     }
+
+
+def _jsonb_metadata(metadata: Mapping[str, object]) -> Jsonb:
+    return Jsonb(dict(metadata))
 
 
 def _row_to_memory_record(row: Row) -> MemoryRecord:

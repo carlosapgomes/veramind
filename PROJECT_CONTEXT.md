@@ -211,6 +211,12 @@ Current project state:
 
 ## Likely Next Slices
 
+- The `postgres-jsonb-adaptation` change is now active to fix real
+  runtime write failures caused by passing raw Python `dict` values into
+  Postgres `JSONB` placeholders
+- The next implementation slice should wrap metadata consistently in the
+  Postgres infrastructure adapters for memory, knowledge, links, and
+  execution writes
 - The `postgres-memory-search-null-filter` change is now active to fix
   the optional salience-filter bug in the Postgres memory search path
 - The next implementation slice should omit nullable `min_salience`

@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Mapping, Sequence
 
+from psycopg.types.json import Jsonb
+
 from verabrain.application import (
     ExecutionQuery,
     ExecutionRecord,
@@ -118,9 +120,86 @@ def test_postgres_memory_repository_upserts_and_maps_memory_rows() -> None:
     assert "ON CONFLICT (id) DO UPDATE" in query
     assert params is not None
     assert params["embedding"] == [0.1, 0.2]
+    assert isinstance(params["metadata"], Jsonb)
+    assert params["metadata"].obj == {"origin": "test"}
     assert loaded is not None
     assert loaded.embedding == (0.1, 0.2)
     assert loaded.metadata == {"origin": "test"}
+
+
+def test_postgres_repository_params_wrap_jsonb_metadata_across_write_paths() -> None:
+    memory = MemoryRecord(
+        id="mem-1",
+        text="User prefers concise answers.",
+        type="preference",
+        scope="long",
+        salience=0.9,
+        created_at=_now(),
+        updated_at=_now(),
+        last_used_at=None,
+        source="manual",
+        embedding=None,
+        metadata={"origin": "memory"},
+    )
+    knowledge = KnowledgeRecord(
+        id="know-1",
+        title="EQMD",
+        text="A Django project for patient tracking.",
+        kind="project-note",
+        created_at=_now(),
+        updated_at=_now(),
+        source="manual",
+        metadata={"origin": "knowledge"},
+    )
+    link = KnowledgeLinkRecord(
+        id="link-1",
+        left_id="know-1",
+        right_id="know-2",
+        relation="related-to",
+        created_at=_now(),
+        metadata={"origin": "link"},
+    )
+    execution = ExecutionRecord(
+        id="exec-1",
+        title="Review EQMD requirements",
+        kind="task",
+        state="open",
+        created_at=_now(),
+        updated_at=_now(),
+        source="manual",
+        project_id="eqmd",
+        due_at=None,
+        review_at=None,
+        metadata={"origin": "execution"},
+    )
+
+    memory_connection = FakeConnection()
+    knowledge_connection = FakeConnection()
+    link_connection = FakeConnection()
+    execution_connection = FakeConnection()
+
+    PostgresMemoryRepository(memory_connection).upsert(memory)
+    PostgresKnowledgeRepository(knowledge_connection).save(knowledge)
+    PostgresKnowledgeRepository(link_connection).save_link(link)
+    PostgresExecutionRepository(execution_connection).save(execution)
+
+    memory_params = memory_connection.executed[0][1]
+    knowledge_params = knowledge_connection.executed[0][1]
+    link_params = link_connection.executed[0][1]
+    execution_params = execution_connection.executed[0][1]
+
+    assert memory_params is not None
+    assert knowledge_params is not None
+    assert link_params is not None
+    assert execution_params is not None
+    assert isinstance(memory_params["metadata"], Jsonb)
+    assert memory_params["metadata"].obj == {"origin": "memory"}
+    assert isinstance(knowledge_params["metadata"], Jsonb)
+    assert knowledge_params["metadata"].obj == {"origin": "knowledge"}
+    assert isinstance(link_params["metadata"], Jsonb)
+    assert link_params["metadata"].obj == {"origin": "link"}
+    assert isinstance(execution_params["metadata"], Jsonb)
+    assert execution_params["metadata"].obj == {"origin": "execution"}
 
 
 def test_postgres_memory_repository_builds_bounded_search_queries() -> None:
