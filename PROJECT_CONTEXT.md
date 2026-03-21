@@ -211,6 +211,12 @@ Current project state:
 
 ## Likely Next Slices
 
+- The `openai-embedding-runtime-integration` change is now active to
+  make the local MVP use a real embedding provider instead of the
+  current `unavailable` fallback path
+- The next implementation slices should define the OpenAI runtime
+  settings surface, wire provider-backed write/query embeddings into the
+  local MVP path, and document the required env vars
 - The `postgres-jsonb-adaptation` change is now active to fix real
   runtime write failures caused by passing raw Python `dict` values into
   Postgres `JSONB` placeholders
