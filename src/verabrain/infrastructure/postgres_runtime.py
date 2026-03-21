@@ -108,7 +108,16 @@ def load_default_postgres_connector() -> PostgresConnector:
         raise PostgresDriverUnavailableError(
             "psycopg.connect is not available for the Postgres runtime path."
         )
-    return cast(PostgresConnector, connect)
+    rows = getattr(psycopg, "rows", None)
+    dict_row = getattr(rows, "dict_row", None)
+
+    def connector(*args: object, **kwargs: object) -> PostgresConnectionProtocol:
+        connection_kwargs = dict(kwargs)
+        if dict_row is not None and "row_factory" not in connection_kwargs:
+            connection_kwargs["row_factory"] = dict_row
+        return cast(PostgresConnectionProtocol, connect(*args, **connection_kwargs))
+
+    return connector
 
 
 class PostgresConnectionFactory:
@@ -291,7 +300,17 @@ def _ensure_present(
     with connection.cursor() as cursor:
         cursor.execute(query, params)
         row = cursor.fetchone()
-    if row is None or row.get("present") is not True:
+    if not _row_has_present(row):
         raise PostgresSchemaVerificationError(
             f"Postgres runtime schema verification failed for {target}."
         )
+
+
+def _row_has_present(row: object) -> bool:
+    if row is None:
+        return False
+    if isinstance(row, Mapping):
+        return row.get("present") is True
+    if isinstance(row, Sequence) and not isinstance(row, (str, bytes, bytearray)):
+        return len(row) > 0 and row[0] is True
+    return False

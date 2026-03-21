@@ -53,6 +53,22 @@ class FakeCursor:
     def fetchone(self) -> Mapping[str, object] | None:
         if self._connection._last_params is None:
             return None
+        if self._connection.row_mode == "tuple":
+            if "extension_name" in self._connection._last_params:
+                extension = self._connection._last_params["extension_name"]
+                return cast(
+                    Mapping[str, object],
+                    (f"extension:{extension}" in self._connection.present_targets,),
+                )
+            if "qualified_name" in self._connection._last_params:
+                qualified_name = self._connection._last_params["qualified_name"]
+                return cast(
+                    Mapping[str, object],
+                    (
+                        f"relation:{qualified_name}"
+                        in self._connection.present_targets,
+                    ),
+                )
         if "extension_name" in self._connection._last_params:
             extension = self._connection._last_params["extension_name"]
             return {"present": f"extension:{extension}" in self._connection.present_targets}
@@ -77,8 +93,14 @@ class FakeCursor:
 
 
 class FakeConnection:
-    def __init__(self, *, present_targets: Sequence[str] = ()) -> None:
+    def __init__(
+        self,
+        *,
+        present_targets: Sequence[str] = (),
+        row_mode: str = "mapping",
+    ) -> None:
         self.present_targets = set(present_targets)
+        self.row_mode = row_mode
         self.executed: list[tuple[str, Mapping[str, object] | None]] = []
         self._last_params: Mapping[str, object] | None = None
         self.commits = 0
@@ -226,6 +248,37 @@ def test_loading_default_connector_reports_missing_driver(monkeypatch: pytest.Mo
         load_default_postgres_connector()
 
 
+def test_loading_default_connector_uses_dict_row_factory_by_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[tuple[object, ...], dict[str, object]]] = []
+    dict_row = object()
+
+    class FakePsycopg:
+        rows = type("FakeRows", (), {"dict_row": dict_row})()
+
+        @staticmethod
+        def connect(*args: object, **kwargs: object) -> FakeConnection:
+            calls.append((args, dict(kwargs)))
+            return FakeConnection()
+
+    monkeypatch.setattr(
+        "verabrain.infrastructure.postgres_runtime.import_module",
+        lambda _name: FakePsycopg,
+    )
+
+    connector = load_default_postgres_connector()
+    connection = connector("postgresql://verabrain:test@localhost/verabrain")
+
+    assert isinstance(connection, FakeConnection)
+    assert calls == [
+        (
+            ("postgresql://verabrain:test@localhost/verabrain",),
+            {"row_factory": dict_row},
+        )
+    ]
+
+
 def test_verify_postgres_runtime_schema_checks_required_runtime_artifacts() -> None:
     connection = FakeConnection(present_targets=REQUIRED_RUNTIME_TARGETS)
 
@@ -236,6 +289,18 @@ def test_verify_postgres_runtime_schema_checks_required_runtime_artifacts() -> N
     assert "relation:public.execution_items_project_state_idx" in verified
     assert connection.commits == 0
     assert connection.rollbacks == 0
+
+
+def test_verify_postgres_runtime_schema_accepts_tuple_rows_from_driver() -> None:
+    connection = FakeConnection(
+        present_targets=REQUIRED_RUNTIME_TARGETS,
+        row_mode="tuple",
+    )
+
+    verified = verify_postgres_runtime_schema(connection)
+
+    assert verified[0] == "extension:vector"
+    assert "relation:public.memories" in verified
 
 
 def test_verify_postgres_runtime_schema_raises_for_missing_artifacts() -> None:
