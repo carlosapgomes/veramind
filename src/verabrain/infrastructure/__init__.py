@@ -1,5 +1,12 @@
 """Infrastructure adapters for persistence and external services."""
 
+from .openai_embeddings import (
+    OpenAIEmbeddingProvider,
+    OpenAIEmbeddingProviderUnavailableError,
+    OpenAIEmbeddingRuntimeConfigurationError,
+    OpenAIEmbeddingRuntimeSettings,
+    load_default_openai_client_factory,
+)
 from .in_memory import (
     InMemoryExecutionRepository,
     InMemoryKnowledgeRepository,
@@ -41,6 +48,10 @@ __all__ = [
     "InMemoryPersistenceStore",
     "InMemoryUnitOfWork",
     "INITIAL_SCHEMA_MIGRATION",
+    "OpenAIEmbeddingProvider",
+    "OpenAIEmbeddingProviderUnavailableError",
+    "OpenAIEmbeddingRuntimeConfigurationError",
+    "OpenAIEmbeddingRuntimeSettings",
     "PostgresMigration",
     "PostgresExecutionRepository",
     "PostgresKnowledgeRepository",
@@ -56,6 +67,7 @@ __all__ = [
     "bootstrap_postgres_runtime_schema",
     "list_postgres_migrations",
     "load_default_postgres_connector",
+    "load_default_openai_client_factory",
     "PostgresRuntimeConfigurationError",
     "PostgresRuntimeSettings",
     "render_postgres_migration_sql",

@@ -10,7 +10,7 @@
 ## 2. Next implementation slices
 
 - [x] Add a design artifact for the OpenAI-backed runtime flow
-- [ ] Define the OpenAI embedding runtime settings surface and provider
+- [x] Define the OpenAI embedding runtime settings surface and provider
       boundary at the infrastructure edge
 - [ ] Wire OpenAI-backed memory write embeddings into the local MVP
       application assembly
