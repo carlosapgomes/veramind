@@ -393,6 +393,10 @@ def test_runtime_application_factory_creates_postgres_unit_of_work() -> None:
 
 
 def test_runtime_application_factory_wires_postgres_backed_application() -> None:
+    class FakeMemoryEmbeddingProvider:
+        def embed_memory_text(self, text: str) -> tuple[float, ...] | None:
+            return (0.9, 0.8) if text == "User prefers concise answers." else None
+
     def provider(query: str) -> tuple[float, ...] | None:
         return (0.1, 0.2) if query == "Hermes" else None
 
@@ -409,6 +413,7 @@ def test_runtime_application_factory_wires_postgres_backed_application() -> None
 
     application = factory.create_application(
         id_generator=lambda: "mem-1",
+        memory_embedding_provider=FakeMemoryEmbeddingProvider(),
         memory_query_embedding_provider=provider,
     )
     saved = application.memory.save(
@@ -422,7 +427,9 @@ def test_runtime_application_factory_wires_postgres_backed_application() -> None
     )
 
     assert saved.id == "mem-1"
+    assert saved.embedding == (0.9, 0.8)
     assert application.context.memory_query_embedding_provider is provider
+    assert application.memory.memory_embedding_provider is not None
     assert len(connector.calls) == 1
     assert len(connector.connections) == 1
     assert connector.connections[0].commits == 1

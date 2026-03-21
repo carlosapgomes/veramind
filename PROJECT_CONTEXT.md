@@ -220,9 +220,11 @@ Current project state:
 - The active OpenAI embedding change now includes an infrastructure-edge
   runtime settings surface plus a reusable OpenAI provider boundary for
   write and query embeddings
-- The next implementation slices should wire provider-backed
-  write/query embeddings into the local MVP path and document the
-  required env vars
+- The active OpenAI embedding change now wires provider-backed memory
+  write embeddings into the local MVP application assembly when OpenAI
+  settings are present
+- The next implementation slices should wire provider-backed query
+  embeddings into the local MVP path and document the required env vars
 - The `postgres-jsonb-adaptation` change is now active to fix real
   runtime write failures caused by passing raw Python `dict` values into
   Postgres `JSONB` placeholders

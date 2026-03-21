@@ -8,7 +8,11 @@ from importlib import import_module
 from typing import Callable, Literal, Mapping, Sequence, cast
 from uuid import uuid4
 
-from verabrain.application import QueryEmbeddingProvider, VeraBrainApplication
+from verabrain.application import (
+    MemoryEmbeddingProvider,
+    QueryEmbeddingProvider,
+    VeraBrainApplication,
+)
 
 from .postgres import PostgresConnectionProtocol
 from .postgres import PostgresUnitOfWork
@@ -212,6 +216,7 @@ class PostgresRuntimeApplicationFactory:
         *,
         clock: RuntimeClock | None = None,
         id_generator: RuntimeIdGenerator | None = None,
+        memory_embedding_provider: MemoryEmbeddingProvider | None = None,
         memory_query_embedding_provider: QueryEmbeddingProvider | None = None,
     ) -> VeraBrainApplication:
         """Construct the VeraBrain application over the Postgres path."""
@@ -220,6 +225,7 @@ class PostgresRuntimeApplicationFactory:
             unit_of_work=self.create_unit_of_work(),
             clock=clock if clock is not None else _runtime_now,
             id_generator=id_generator if id_generator is not None else _runtime_id,
+            memory_embedding_provider=memory_embedding_provider,
             memory_query_embedding_provider=memory_query_embedding_provider,
         )
 

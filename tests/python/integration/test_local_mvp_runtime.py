@@ -72,7 +72,13 @@ class StubRuntimeApplicationFactory:
             open_startup_connection=lambda: self.startup_connection,
         )
 
-    def create_application(self) -> VeraBrainApplication:
+    def create_application(
+        self,
+        *,
+        memory_embedding_provider=None,
+        memory_query_embedding_provider=None,
+    ) -> VeraBrainApplication:
+        del memory_embedding_provider, memory_query_embedding_provider
         return self.application
 
 

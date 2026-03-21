@@ -9,6 +9,8 @@ from typing import Any, Protocol, cast
 
 from verabrain.adapters.mcp import run_stdio_server
 from verabrain.infrastructure import (
+    OpenAIEmbeddingProvider,
+    OpenAIEmbeddingRuntimeSettings,
     PostgresRuntimeApplicationFactory,
     PostgresRuntimeConfigurationError,
     PostgresRuntimeSettings,
@@ -72,6 +74,7 @@ def run_local_mvp(
 
     source = os.environ if env is None else env
     settings = load_local_mvp_settings(source)
+    embedding_settings = load_local_mvp_openai_embedding_settings(source)
     server_name = _clean(source.get("VERABRAIN_MCP_SERVER_NAME")) or DEFAULT_SERVER_NAME
     application_factory = PostgresRuntimeApplicationFactory.from_settings(
         settings,
@@ -91,7 +94,11 @@ def run_local_mvp(
     finally:
         _close_connection(startup_connection)
 
-    application = application_factory.create_application()
+    application = application_factory.create_application(
+        memory_embedding_provider=_build_openai_memory_embedding_provider(
+            embedding_settings
+        )
+    )
     run_stdio_server(
         application,
         server_name=server_name,
@@ -108,6 +115,19 @@ def main() -> int:
     except (LocalMVPStartupError, PostgresRuntimeConfigurationError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
+
+
+def load_local_mvp_openai_embedding_settings(
+    env: Mapping[str, str] | None = None,
+) -> OpenAIEmbeddingRuntimeSettings:
+    """Build explicit OpenAI embedding settings for the local MVP path."""
+
+    source = os.environ if env is None else env
+    return OpenAIEmbeddingRuntimeSettings(
+        api_key=_clean(source.get("VERABRAIN_OPENAI_API_KEY")),
+        model=_clean(source.get("VERABRAIN_OPENAI_EMBEDDING_MODEL")),
+        base_url=_clean(source.get("VERABRAIN_OPENAI_BASE_URL")),
+    )
 
 
 def _load_connection_kwargs(env: Mapping[str, str]) -> dict[str, object]:
@@ -173,3 +193,11 @@ def _close_connection(connection: PostgresConnectionProtocol) -> None:
     close = getattr(connection, "close", None)
     if callable(close):
         close()
+
+
+def _build_openai_memory_embedding_provider(
+    settings: OpenAIEmbeddingRuntimeSettings,
+) -> OpenAIEmbeddingProvider | None:
+    if not settings.enabled:
+        return None
+    return OpenAIEmbeddingProvider(settings)

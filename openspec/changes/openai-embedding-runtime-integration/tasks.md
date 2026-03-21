@@ -12,7 +12,7 @@
 - [x] Add a design artifact for the OpenAI-backed runtime flow
 - [x] Define the OpenAI embedding runtime settings surface and provider
       boundary at the infrastructure edge
-- [ ] Wire OpenAI-backed memory write embeddings into the local MVP
+- [x] Wire OpenAI-backed memory write embeddings into the local MVP
       application assembly
 - [ ] Wire OpenAI-backed query embeddings into memory retrieval for the
       local MVP path
