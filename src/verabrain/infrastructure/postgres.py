@@ -256,7 +256,7 @@ class PostgresMemoryRepository(MemoryRepository):
                 ELSE 0.0
               END AS lexical_score,
               CASE
-                WHEN %(query_embedding)s IS NULL OR embedding IS NULL THEN NULL
+                WHEN embedding IS NULL THEN NULL
                 ELSE 1 - (embedding <=> %(query_embedding)s::vector)
               END AS semantic_score
             FROM memories

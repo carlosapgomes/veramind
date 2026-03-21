@@ -245,6 +245,7 @@ def test_postgres_memory_repository_builds_bounded_search_queries() -> None:
     assert search_params["pattern"] == "%Hermes%"
     assert search_params["candidate_limit"] == 20
     assert search_params["query_embedding"] == "[0.4,0.5]"
+    assert "%(query_embedding)s IS NULL" not in search_query
     assert "embedding <=> %(query_embedding)s::vector" in search_query
     assert "LIMIT %(candidate_limit)s" in similar_query
     assert similar_params is not None
@@ -352,6 +353,7 @@ def test_postgres_memory_repository_reranks_candidates_with_hybrid_signals() -> 
     assert search_params is not None
     assert "min_salience" not in search_params
     assert search_params["query_embedding"] == "[0.2,0.3]"
+    assert "%(query_embedding)s IS NULL" not in search_query
     assert "embedding <=> %(query_embedding)s::vector" in search_query
     assert [record.id for record in results] == ["mem-semantic"]
 
