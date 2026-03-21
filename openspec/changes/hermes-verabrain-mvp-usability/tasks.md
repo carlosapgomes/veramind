@@ -4,6 +4,7 @@
 
 - [x] Define the Hermes VeraBrain MVP usability proposal
 - [x] Define the initial Hermes VeraBrain MVP usability specification
+- [x] Define the initial Hermes VeraBrain MVP usability design
 - [x] Record the next implementation-oriented tasks
 
 ## 2. Next implementation slices

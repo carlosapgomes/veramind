@@ -223,5 +223,8 @@ Current project state:
 - The next focus is the Hermes-facing usability layer over the existing
   local MVP baseline, including the future `VeraBrain` skill as a
   procedural layer over MCP
+- The active usability change now has a design artifact for the Hermes
+  decision flow, explicit intent patterns, and the role of the future
+  `VeraBrain` skill
 
 <!-- generated-by: project-context-maintainer -->
