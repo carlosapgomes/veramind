@@ -203,10 +203,26 @@ def test_postgres_memory_repository_uses_lexical_only_query_when_semantic_input_
     search_query, search_params = connection.executed[0]
     assert "NULL AS semantic_score" in search_query
     assert "embedding <=> %(query_embedding)s" not in search_query
+    assert "min_salience" not in search_query
     assert search_params is not None
     assert "query_embedding" not in search_params
+    assert "min_salience" not in search_params
     assert search_params["candidate_limit"] == 10
     assert results[0].id == "mem-1"
+
+
+def test_postgres_memory_repository_keeps_explicit_salience_filter_when_requested() -> None:
+    connection = FakeConnection(all_results=[[]])
+    repository = PostgresMemoryRepository(connection)
+
+    repository.search(
+        MemorySearchQuery(text="Hermes", limit=2, min_salience=0.6)
+    )
+
+    search_query, search_params = connection.executed[0]
+    assert "salience >= %(min_salience)s" in search_query
+    assert search_params is not None
+    assert search_params["min_salience"] == 0.6
 
 
 def test_postgres_memory_repository_reranks_candidates_with_hybrid_signals() -> None:
@@ -252,6 +268,10 @@ def test_postgres_memory_repository_reranks_candidates_with_hybrid_signals() -> 
         MemorySearchQuery(text="Hermes runtime", limit=1, query_embedding=(0.2, 0.3))
     )
 
+    search_query, search_params = connection.executed[0]
+    assert "salience >= %(min_salience)s" not in search_query
+    assert search_params is not None
+    assert "min_salience" not in search_params
     assert [record.id for record in results] == ["mem-semantic"]
 
 

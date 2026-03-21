@@ -184,6 +184,14 @@ class PostgresMemoryRepository(MemoryRepository):
         limit: int,
         min_salience: float | None,
     ) -> Sequence[Row]:
+        where_clauses = ["text ILIKE %(pattern)s"]
+        params: dict[str, object] = {
+            "pattern": _like_pattern(text),
+            "candidate_limit": memory_candidate_limit(limit),
+        }
+        if min_salience is not None:
+            where_clauses.append("salience >= %(min_salience)s")
+            params["min_salience"] = min_salience
         sql = """
             SELECT
               id,
@@ -203,16 +211,10 @@ class PostgresMemoryRepository(MemoryRepository):
               END AS lexical_score,
               NULL AS semantic_score
             FROM memories
-            WHERE text ILIKE %(pattern)s
-              AND (%(min_salience)s IS NULL OR salience >= %(min_salience)s)
+            WHERE {where_clause}
             ORDER BY salience DESC, updated_at DESC, id ASC
             LIMIT %(candidate_limit)s
-        """
-        params = {
-            "pattern": _like_pattern(text),
-            "min_salience": min_salience,
-            "candidate_limit": memory_candidate_limit(limit),
-        }
+        """.format(where_clause="\n              AND ".join(where_clauses))
         with self._connection.cursor() as cursor:
             cursor.execute(sql, params)
             return cursor.fetchall()
@@ -225,6 +227,15 @@ class PostgresMemoryRepository(MemoryRepository):
         min_salience: float | None,
         query_embedding: tuple[float, ...],
     ) -> Sequence[Row]:
+        where_clauses = ["(text ILIKE %(pattern)s OR embedding IS NOT NULL)"]
+        params: dict[str, object] = {
+            "pattern": _like_pattern(text),
+            "query_embedding": list(query_embedding),
+            "candidate_limit": memory_candidate_limit(limit),
+        }
+        if min_salience is not None:
+            where_clauses.append("salience >= %(min_salience)s")
+            params["min_salience"] = min_salience
         sql = """
             SELECT
               id,
@@ -247,11 +258,7 @@ class PostgresMemoryRepository(MemoryRepository):
                 ELSE 1 - (embedding <=> %(query_embedding)s)
               END AS semantic_score
             FROM memories
-            WHERE (
-              text ILIKE %(pattern)s
-              OR embedding IS NOT NULL
-            )
-              AND (%(min_salience)s IS NULL OR salience >= %(min_salience)s)
+            WHERE {where_clause}
             ORDER BY
               CASE WHEN embedding IS NULL THEN NULL
                 ELSE embedding <=> %(query_embedding)s
@@ -260,13 +267,7 @@ class PostgresMemoryRepository(MemoryRepository):
               updated_at DESC,
               id ASC
             LIMIT %(candidate_limit)s
-        """
-        params = {
-            "pattern": _like_pattern(text),
-            "query_embedding": list(query_embedding),
-            "min_salience": min_salience,
-            "candidate_limit": memory_candidate_limit(limit),
-        }
+        """.format(where_clause="\n              AND ".join(where_clauses))
         with self._connection.cursor() as cursor:
             cursor.execute(sql, params)
             return cursor.fetchall()

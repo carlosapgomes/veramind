@@ -211,6 +211,11 @@ Current project state:
 
 ## Likely Next Slices
 
+- The `postgres-memory-search-null-filter` change is now active to fix
+  the optional salience-filter bug in the Postgres memory search path
+- The next implementation slice should omit nullable `min_salience`
+  placeholders from lexical and semantic Postgres memory queries when
+  no salience threshold is requested
 - The `mcp-argument-compatibility` change is now archived as completed
   baseline work
 - The archived MCP argument-compatibility baseline now keeps direct MCP
