@@ -39,6 +39,17 @@ The default values already match the local MVP path:
 - password: `verabrain`
 - migration mode: `apply`
 
+The `.env.example` file also includes the optional OpenAI embedding
+settings used by the current local MVP path:
+
+- `VERABRAIN_OPENAI_API_KEY`
+- `VERABRAIN_OPENAI_EMBEDDING_MODEL`
+- `VERABRAIN_OPENAI_BASE_URL`
+
+If `VERABRAIN_OPENAI_API_KEY` is left empty, the local MVP keeps working
+but falls back to lexical-only retrieval and memory writes without
+embeddings.
+
 ## 2. Start the Project-Local Postgres Service
 
 Start the dedicated VeraBrain database:
@@ -75,6 +86,7 @@ The local MVP launcher depends on:
 
 - `mcp[cli]` for the MCP server runtime
 - `psycopg[binary]` for the Postgres driver
+- `openai` for the optional embedding provider runtime
 
 ## 4. Launch the VeraBrain MCP Server from the Host
 
@@ -87,9 +99,21 @@ uv run --env-file .env verabrain-mcp-local-mvp
 This path:
 
 - reads the explicit runtime settings
+- reads the optional OpenAI embedding settings
 - connects to the Compose-backed Postgres instance
 - applies or verifies the VeraBrain schema
 - starts the MCP server over `stdio`
+
+If OpenAI settings are present:
+
+- `save_memory` attempts write-time embeddings
+- `search_memory` and `get_context_bundle` attempt query-time embeddings
+
+If OpenAI settings are absent or provider calls fail:
+
+- durable writes still succeed when Postgres is healthy
+- saved memory metadata records explicit embedding fallback state
+- retrieval falls back to lexical-only bounded behavior
 
 ## 5. Configure Hermes as the MCP Client
 
@@ -113,6 +137,9 @@ mcp_servers:
       VERABRAIN_POSTGRES_MIGRATION_MODE: "apply"
       VERABRAIN_POSTGRES_FAIL_FAST: "true"
       VERABRAIN_MCP_SERVER_NAME: "VeraBrain"
+      VERABRAIN_OPENAI_API_KEY: "sk-..."
+      VERABRAIN_OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
+      VERABRAIN_OPENAI_BASE_URL: ""
 ```
 
 This keeps the intended authority split:
@@ -134,6 +161,13 @@ Expected outcomes:
 - bounded retrieval returns the saved record
 - Hermes consumes VeraBrain recall through MCP without replacing its own
   session-local memory behavior
+
+If OpenAI embeddings are configured and healthy:
+
+- saved memory records should no longer persist
+  `verabrain_embedding_status=unavailable` by default
+- queries with related wording should recall semantically even when the
+  lexical match is imperfect
 
 Compatibility note:
 
@@ -208,3 +242,25 @@ Then retry:
 ```bash
 uv run --env-file .env verabrain-mcp-local-mvp
 ```
+
+### Semantic recall still behaves lexically
+
+Check:
+
+- `VERABRAIN_OPENAI_API_KEY` is present in `.env` or Hermes MCP env
+- `VERABRAIN_OPENAI_EMBEDDING_MODEL` is set to a valid embedding model
+- the local MVP process was restarted after changing env vars
+
+If OpenAI is unavailable or misconfigured, VeraBrain intentionally
+falls back to lexical-only retrieval.
+
+### Memory saves show `verabrain_embedding_status=unavailable`
+
+Check:
+
+- the OpenAI API key is configured
+- the embedding model name is valid
+- the VeraBrain MCP process can reach the OpenAI API
+
+If the provider request fails, the write path remains survivable and
+records explicit fallback metadata instead of failing the whole save.

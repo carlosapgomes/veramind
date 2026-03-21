@@ -225,8 +225,11 @@ Current project state:
   settings are present
 - The active OpenAI embedding change now wires provider-backed query
   embeddings into local MVP retrieval when OpenAI settings are present
-- The next implementation slices should document the required env vars,
-  fallback behavior, and local MVP usage for the OpenAI-backed path
+- The active OpenAI embedding change now documents the required env
+  vars, fallback behavior, and local MVP usage for the OpenAI-backed
+  local MVP path
+- The next implementation slice should add explicit runtime tests for
+  configured, missing-key, and provider-failure OpenAI behavior
 - The `postgres-jsonb-adaptation` change is now active to fix real
   runtime write failures caused by passing raw Python `dict` values into
   Postgres `JSONB` placeholders

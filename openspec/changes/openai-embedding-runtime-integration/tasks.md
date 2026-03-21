@@ -16,7 +16,7 @@
       application assembly
 - [x] Wire OpenAI-backed query embeddings into memory retrieval for the
       local MVP path
-- [ ] Document runtime env vars, fallback behavior, and local MVP usage
+- [x] Document runtime env vars, fallback behavior, and local MVP usage
       with OpenAI embeddings
 - [ ] Add tests for configured, missing-key, and provider-failure
       runtime behavior
