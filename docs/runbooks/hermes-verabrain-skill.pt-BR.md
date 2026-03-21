@@ -74,7 +74,8 @@ procedural para decidir entre:
 Uso típico:
 
 ```text
-/verabrain Save this idea in VeraBrain: I want a personal assistant workflow for vascular surgery study notes.
+/verabrain Save this idea in VeraBrain: I want a personal assistant
+workflow for vascular surgery study notes.
 ```
 
 Ou:
@@ -105,13 +106,16 @@ O skill não deve levar o Hermes a:
 
 Exemplos que devem empurrar o Hermes para durable save:
 
-- `/verabrain Remember this project decision for later: use MCP-first before considering a native Hermes plugin.`
-- `/verabrain Register this idea in VeraBrain: create a study workflow for vascular surgery notes.`
+- `/verabrain Remember this project decision for later: use MCP-first
+  before considering a native Hermes plugin.`
+- `/verabrain Register this idea in VeraBrain: create a study workflow
+  for vascular surgery notes.`
 
 Exemplos que devem empurrar o Hermes para durable recall:
 
 - `/verabrain What do we already have stored about the local MVP?`
-- `/verabrain Bring back the bounded context we saved for the Postgres MCP local MVP.`
+- `/verabrain Bring back the bounded context we saved for the Postgres
+  MCP local MVP.`
 
 Exemplos que devem permanecer locais mesmo com o skill carregado:
 

@@ -73,7 +73,8 @@ for deciding between:
 Typical use:
 
 ```text
-/verabrain Save this idea in VeraBrain: I want a personal assistant workflow for vascular surgery study notes.
+/verabrain Save this idea in VeraBrain: I want a personal assistant
+workflow for vascular surgery study notes.
 ```
 
 Or:
@@ -101,13 +102,16 @@ The skill should not cause Hermes to:
 
 Examples that should push Hermes toward durable save:
 
-- `/verabrain Remember this project decision for later: use MCP-first before considering a native Hermes plugin.`
-- `/verabrain Register this idea in VeraBrain: create a study workflow for vascular surgery notes.`
+- `/verabrain Remember this project decision for later: use MCP-first
+  before considering a native Hermes plugin.`
+- `/verabrain Register this idea in VeraBrain: create a study workflow
+  for vascular surgery notes.`
 
 Examples that should push Hermes toward durable recall:
 
 - `/verabrain What do we already have stored about the local MVP?`
-- `/verabrain Bring back the bounded context we saved for the Postgres MCP local MVP.`
+- `/verabrain Bring back the bounded context we saved for the Postgres
+  MCP local MVP.`
 
 Examples that should remain local even with the skill loaded:
 

@@ -219,26 +219,18 @@ Current project state:
   `verabrain-mcp-local-mvp` launcher, smoke-oriented integration
   coverage, project-local Compose database assets, and bilingual
   runbook documentation
-- The active change is now `hermes-verabrain-mvp-usability`
-- The next focus is the Hermes-facing usability layer over the existing
-  local MVP baseline, including the future `VeraBrain` skill as a
-  procedural layer over MCP
-- The active usability change now has a design artifact for the Hermes
-  decision flow, explicit intent patterns, and the role of the future
-  `VeraBrain` skill
-- The initial usability policy is now fixed around three conservative
-  decision classes: `stay-local`, `retrieve-from-verabrain`, and
+- The `hermes-verabrain-mvp-usability` change is now archived as
+  completed baseline work
+- The archived Hermes-facing usability baseline now includes the
+  decision classes `stay-local`, `retrieve-from-verabrain`, and
   `save-to-verabrain`
-- The explicit MVP intent mapping is now fixed around `durable-save
-  intents`, `durable-recall intents`, and `stay-local by default`
-- The role of the future Hermes `VeraBrain` skill is now fixed as a
-  procedural mapper from decision classes to the existing VeraBrain MCP
-  tools, not as a new source of memory policy
-- The repository now contains an initial Hermes `VeraBrain` skill
-  artifact under `hermes-skills/verabrain/` for MVP usage guidance over
-  the MCP tool surface
-- The Hermes-facing MVP usage path now has bilingual runbook coverage
-  for installing and using the `VeraBrain` skill, plus integration
-  checks that keep the skill and runbooks aligned with the MCP surface
+- The archived Hermes-facing usability baseline now includes the
+  explicit intent mapping for durable save, durable recall, and
+  stay-local requests
+- The archived Hermes-facing usability baseline now includes the initial
+  `VeraBrain` skill artifact plus bilingual runbooks and integration
+  checks for using that skill with the local MVP path
+- Open the next OpenSpec change on top of the archived local MVP and
+  usability baselines
 
 <!-- generated-by: project-context-maintainer -->
