@@ -8,7 +8,10 @@ version = "0.1.0"
 description = "Python-first VeraBrain skeleton for the Hermes-centered architecture."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+  "mcp[cli]",
+  "psycopg[binary]",
+]
 
 [project.scripts]
 verabrain-mcp-local-mvp = "verabrain.runtime.local_mvp:main"

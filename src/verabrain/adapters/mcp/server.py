@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Mapping, Protocol
+from typing import Callable, Mapping, Protocol, cast
 
 from verabrain.application import VeraBrainApplication
 
@@ -156,7 +156,14 @@ def _load_server_factory() -> MCPServerFactory:
             "The optional MCP SDK is not installed. "
             "Install it with `uv add 'mcp[cli]'` or run with `uv run --with mcp`."
         ) from exc
-    return FastMCP
+
+    def factory(server_name: str, *, json_response: bool = True) -> MCPServerProtocol:
+        return cast(
+            MCPServerProtocol,
+            FastMCP(name=server_name, json_response=json_response),
+        )
+
+    return factory
 
 
 def _register_tool(server: MCPServerProtocol, tool: MCPToolBinding) -> None:

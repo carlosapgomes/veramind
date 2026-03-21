@@ -106,11 +106,24 @@ def test_build_mcp_server_registers_tool_handlers_with_json_responses() -> None:
     assert adapter.calls[-1] == ("save_memory", {"text": "Keep this fact"})
 
 
-def test_build_mcp_server_reports_missing_optional_sdk_dependency() -> None:
+def test_build_mcp_server_reports_missing_optional_sdk_dependency(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     definition = MCPServerDefinition(name="VeraBrain", tools=())
+    missing = MissingMCPDependencyError("missing mcp")
 
-    with pytest.raises(MissingMCPDependencyError):
+    def fake_load_server_factory() -> object:
+        raise missing
+
+    monkeypatch.setattr(
+        "verabrain.adapters.mcp.server._load_server_factory",
+        fake_load_server_factory,
+    )
+
+    with pytest.raises(MissingMCPDependencyError) as excinfo:
         build_mcp_server(definition)
+
+    assert excinfo.value is missing
 
 
 def test_run_stdio_server_uses_stdio_transport(monkeypatch: pytest.MonkeyPatch) -> None:

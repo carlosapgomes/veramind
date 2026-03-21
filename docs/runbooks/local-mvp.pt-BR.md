@@ -14,10 +14,7 @@ VeraBrain:
 - Docker e Docker Compose
 - `uv`
 - Hermes Agent com suporte a MCP
-- acesso em runtime às dependências Python opcionais exigidas pelo
-  caminho do MVP local:
-  - `mcp[cli]`
-  - `psycopg[binary]`
+- dependências Python do projeto instaladas com `uv sync`
 
 ## Arquivos usados por este runbook
 
@@ -84,7 +81,7 @@ O launcher do MVP local depende de:
 Execute o launcher do MVP local usando o arquivo `.env`:
 
 ```bash
-uv run --with "mcp[cli]" --with "psycopg[binary]" --env-file .env verabrain-mcp-local-mvp
+uv run --env-file .env verabrain-mcp-local-mvp
 ```
 
 Esse caminho:
@@ -106,10 +103,6 @@ mcp_servers:
       - "--directory"
       - "/home/carlos/projects/veramind"
       - "run"
-      - "--with"
-      - "mcp[cli]"
-      - "--with"
-      - "psycopg[binary]"
       - "verabrain-mcp-local-mvp"
     env:
       VERABRAIN_POSTGRES_HOST: "127.0.0.1"
@@ -171,28 +164,28 @@ Verifique:
 
 ### O startup do MCP falha porque o SDK está ausente
 
-Instale a dependência opcional de MCP no ambiente do projeto:
+Resincronize o ambiente do projeto:
 
 ```bash
-uv add "mcp[cli]"
+uv sync
 ```
 
-Ou execute o launcher com dependência ad hoc:
+Depois tente novamente:
 
 ```bash
-uv run --with "mcp[cli]" --env-file .env verabrain-mcp-local-mvp
+uv run --env-file .env verabrain-mcp-local-mvp
 ```
 
 ### O startup do Postgres falha porque o driver está ausente
 
-Instale o driver Postgres no ambiente do projeto:
+Resincronize o ambiente do projeto:
 
 ```bash
-uv add "psycopg[binary]"
+uv sync
 ```
 
-Ou execute o launcher com as duas dependências ad hoc:
+Depois tente novamente:
 
 ```bash
-uv run --with "mcp[cli]" --with "psycopg[binary]" --env-file .env verabrain-mcp-local-mvp
+uv run --env-file .env verabrain-mcp-local-mvp
 ```
