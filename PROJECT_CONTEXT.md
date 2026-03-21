@@ -211,6 +211,11 @@ Current project state:
 
 ## Likely Next Slices
 
+- The `pgvector-driver-registration` change is now active to register
+  `pgvector` types on Psycopg runtime connections for the local MVP path
+- The active `pgvector-driver-registration` change now promotes the
+  `pgvector` Python dependency into the runtime path and registers
+  vector types on default Psycopg connections before repository use
 - The `mcp-debug-observability` change is now active to make the local
   VeraBrain MCP process emit first-party debug logs when requested
 - The next implementation slice should document how to enable the new

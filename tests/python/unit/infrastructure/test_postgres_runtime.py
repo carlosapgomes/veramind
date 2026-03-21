@@ -248,10 +248,35 @@ def test_loading_default_connector_reports_missing_driver(monkeypatch: pytest.Mo
         load_default_postgres_connector()
 
 
+def test_loading_default_connector_reports_missing_pgvector_registration(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakePsycopg:
+        rows = type("FakeRows", (), {"dict_row": object()})()
+
+        @staticmethod
+        def connect(*_args: object, **_kwargs: object) -> FakeConnection:
+            return FakeConnection()
+
+    def fake_import(name: str) -> object:
+        if name == "psycopg":
+            return FakePsycopg
+        raise ModuleNotFoundError("pgvector.psycopg")
+
+    monkeypatch.setattr(
+        "verabrain.infrastructure.postgres_runtime.import_module",
+        fake_import,
+    )
+
+    with pytest.raises(PostgresDriverUnavailableError, match="pgvector is required"):
+        load_default_postgres_connector()
+
+
 def test_loading_default_connector_uses_dict_row_factory_by_default(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     calls: list[tuple[tuple[object, ...], dict[str, object]]] = []
+    registrations: list[FakeConnection] = []
     dict_row = object()
 
     class FakePsycopg:
@@ -262,9 +287,18 @@ def test_loading_default_connector_uses_dict_row_factory_by_default(
             calls.append((args, dict(kwargs)))
             return FakeConnection()
 
+    class FakePgvectorPsycopg:
+        @staticmethod
+        def register_vector(connection: FakeConnection) -> None:
+            registrations.append(connection)
+
     monkeypatch.setattr(
         "verabrain.infrastructure.postgres_runtime.import_module",
-        lambda _name: FakePsycopg,
+        lambda name: (
+            FakePsycopg
+            if name == "psycopg"
+            else FakePgvectorPsycopg
+        ),
     )
 
     connector = load_default_postgres_connector()
@@ -277,6 +311,7 @@ def test_loading_default_connector_uses_dict_row_factory_by_default(
             {"row_factory": dict_row},
         )
     ]
+    assert registrations == [connection]
 
 
 def test_verify_postgres_runtime_schema_checks_required_runtime_artifacts() -> None:

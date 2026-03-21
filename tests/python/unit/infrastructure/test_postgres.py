@@ -3,7 +3,9 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Mapping, Sequence
 
+from pgvector import Vector
 from psycopg.types.json import Jsonb
+import pytest
 
 from verabrain.application import (
     ExecutionQuery,
@@ -125,6 +127,32 @@ def test_postgres_memory_repository_upserts_and_maps_memory_rows() -> None:
     assert loaded is not None
     assert loaded.embedding == (0.1, 0.2)
     assert loaded.metadata == {"origin": "test"}
+
+
+def test_postgres_memory_repository_accepts_registered_pgvector_values() -> None:
+    connection = FakeConnection(
+        one_results=[
+            {
+                "id": "mem-1",
+                "text": "User prefers concise answers.",
+                "type": "preference",
+                "scope": "long",
+                "salience": 0.9,
+                "created_at": _now(),
+                "updated_at": _now(),
+                "last_used_at": None,
+                "source": "manual",
+                "embedding": Vector([0.1, 0.2]),
+                "metadata": {"origin": "test"},
+            }
+        ]
+    )
+    repository = PostgresMemoryRepository(connection)
+
+    loaded = repository.get("mem-1")
+
+    assert loaded is not None
+    assert loaded.embedding == pytest.approx((0.1, 0.2))
 
 
 def test_postgres_repository_params_wrap_jsonb_metadata_across_write_paths() -> None:

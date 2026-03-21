@@ -107,10 +107,21 @@ def load_default_postgres_connector() -> PostgresConnector:
         raise PostgresDriverUnavailableError(
             "psycopg is required for the Postgres runtime path."
         ) from exc
+    try:
+        pgvector_psycopg = import_module("pgvector.psycopg")
+    except ModuleNotFoundError as exc:
+        raise PostgresDriverUnavailableError(
+            "pgvector is required for the Postgres runtime path."
+        ) from exc
     connect = getattr(psycopg, "connect", None)
     if not callable(connect):
         raise PostgresDriverUnavailableError(
             "psycopg.connect is not available for the Postgres runtime path."
+        )
+    register_vector = getattr(pgvector_psycopg, "register_vector", None)
+    if not callable(register_vector):
+        raise PostgresDriverUnavailableError(
+            "pgvector.psycopg.register_vector is required for the Postgres runtime path."
         )
     rows = getattr(psycopg, "rows", None)
     dict_row = getattr(rows, "dict_row", None)
@@ -119,7 +130,12 @@ def load_default_postgres_connector() -> PostgresConnector:
         connection_kwargs = dict(kwargs)
         if dict_row is not None and "row_factory" not in connection_kwargs:
             connection_kwargs["row_factory"] = dict_row
-        return cast(PostgresConnectionProtocol, connect(*args, **connection_kwargs))
+        connection = cast(
+            PostgresConnectionProtocol,
+            connect(*args, **connection_kwargs),
+        )
+        register_vector(connection)
+        return connection
 
     return connector
 

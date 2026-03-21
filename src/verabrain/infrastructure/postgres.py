@@ -748,6 +748,15 @@ def _optional_embedding(value: object) -> tuple[float, ...] | None:
         return None
     if isinstance(value, Sequence) and not isinstance(value, str | bytes):
         return tuple(float(item) for item in value)
+    for method_name in ("to_list", "tolist"):
+        method = getattr(value, method_name, None)
+        if callable(method):
+            resolved = method()
+            if isinstance(resolved, Sequence) and not isinstance(
+                resolved,
+                str | bytes,
+            ):
+                return tuple(float(item) for item in resolved)
     raise ValueError("Expected 'embedding' to be a numeric sequence or null")
 
 
