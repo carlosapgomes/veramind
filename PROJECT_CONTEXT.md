@@ -219,6 +219,8 @@ Current project state:
   `verabrain-mcp-local-mvp` launcher, smoke-oriented integration
   coverage, project-local Compose database assets, and bilingual
   runbook documentation
+- The archived local MVP baseline now documents that the host-launched
+  path requires both `mcp[cli]` and `psycopg[binary]` at runtime
 - The `hermes-verabrain-mvp-usability` change is now archived as
   completed baseline work
 - The archived Hermes-facing usability baseline now includes the

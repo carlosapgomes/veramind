@@ -14,6 +14,10 @@ VeraBrain:
 - Docker and Docker Compose
 - `uv`
 - Hermes Agent with MCP support
+- runtime access to the optional Python dependencies required by the
+  local MVP path:
+  - `mcp[cli]`
+  - `psycopg[binary]`
 
 ## Files Used by This Runbook
 
@@ -70,12 +74,17 @@ docker compose down -v
 uv sync
 ```
 
+The local MVP launcher depends on:
+
+- `mcp[cli]` for the MCP server runtime
+- `psycopg[binary]` for the Postgres driver
+
 ## 4. Launch the VeraBrain MCP Server from the Host
 
 Run the local MVP launcher with the `.env` file:
 
 ```bash
-uv run --env-file .env verabrain-mcp-local-mvp
+uv run --with "mcp[cli]" --with "psycopg[binary]" --env-file .env verabrain-mcp-local-mvp
 ```
 
 This path:
@@ -97,6 +106,10 @@ mcp_servers:
       - "--directory"
       - "/home/carlos/projects/veramind"
       - "run"
+      - "--with"
+      - "mcp[cli]"
+      - "--with"
+      - "psycopg[binary]"
       - "verabrain-mcp-local-mvp"
     env:
       VERABRAIN_POSTGRES_HOST: "127.0.0.1"
@@ -165,4 +178,18 @@ Or run the launcher with an ad hoc dependency:
 
 ```bash
 uv run --with "mcp[cli]" --env-file .env verabrain-mcp-local-mvp
+```
+
+### Postgres startup fails because the driver is missing
+
+Install the Postgres driver in the project environment:
+
+```bash
+uv add "psycopg[binary]"
+```
+
+Or run the launcher with both ad hoc dependencies:
+
+```bash
+uv run --with "mcp[cli]" --with "psycopg[binary]" --env-file .env verabrain-mcp-local-mvp
 ```
