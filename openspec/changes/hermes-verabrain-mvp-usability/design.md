@@ -107,6 +107,23 @@ Its role should not be:
 - changing the MCP contracts
 - silently broadening capture policy
 
+In practical MVP terms, the skill should map:
+
+- `save-to-verabrain` -> `save_memory`
+- `retrieve-from-verabrain` for topic lookup -> `search_memory`
+- `retrieve-from-verabrain` for bounded working context ->
+  `get_context_bundle`
+- `stay-local` -> no VeraBrain tool call
+
+The skill should also teach:
+
+- the minimum arguments Hermes needs to provide
+- what successful save or retrieval looks like
+- when not to use VeraBrain at all
+
+This keeps the skill procedural and lightweight. It tells Hermes how to
+use VeraBrain; it does not redefine what VeraBrain is.
+
 ## Explicit User Intent Patterns
 
 The usability design should focus first on strong, explicit patterns.

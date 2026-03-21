@@ -13,7 +13,7 @@
   VeraBrain versus rely on its own memory layers
 - [x] Define the initial explicit user-intent phrases and behaviors for
   durable save and bounded recall
-- [ ] Define the role of the Hermes `VeraBrain` skill relative to the
+- [x] Define the role of the Hermes `VeraBrain` skill relative to the
   existing MCP tools
 - [ ] Add the initial Hermes `VeraBrain` skill artifact for MVP usage
 - [ ] Add the first integration and documentation coverage for the

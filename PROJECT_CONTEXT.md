@@ -231,5 +231,8 @@ Current project state:
   `save-to-verabrain`
 - The explicit MVP intent mapping is now fixed around `durable-save
   intents`, `durable-recall intents`, and `stay-local by default`
+- The role of the future Hermes `VeraBrain` skill is now fixed as a
+  procedural mapper from decision classes to the existing VeraBrain MCP
+  tools, not as a new source of memory policy
 
 <!-- generated-by: project-context-maintainer -->

@@ -138,12 +138,53 @@ The skill MUST NOT become the architectural source of truth for:
 - durable storage semantics
 - MCP tool contracts
 
+The initial skill role MUST be limited to:
+
+- mapping the current decision classes to the correct VeraBrain MCP tool
+- teaching the minimum required arguments and expected outcomes for each
+  tool
+- reinforcing when Hermes should stay local instead of calling
+  VeraBrain
+- providing practical MVP usage examples
+
+The initial skill role MUST NOT include:
+
+- inventing new capture heuristics outside the accepted usability policy
+- bypassing the explicit `save_memory`, `search_memory`, or
+  `get_context_bundle` tool surfaces
+- redefining how durable memory is stored or retrieved
+- introducing hidden automatic persistence behavior
+
+The initial tool mapping for the skill MUST be:
+
+- `save-to-verabrain` -> `save_memory`
+- `retrieve-from-verabrain` for topic lookup -> `search_memory`
+- `retrieve-from-verabrain` for active bounded context ->
+  `get_context_bundle`
+- `stay-local` -> no VeraBrain MCP call
+
 #### Scenario: Hermes uses the VeraBrain skill during MVP usage
 
 - **WHEN** Hermes has the VeraBrain skill available
 - **THEN** the skill guides Hermes toward the correct VeraBrain MCP
   tools and usage patterns
 - **AND** the underlying MCP contracts remain the operational boundary
+
+#### Scenario: Skill keeps Hermes local when VeraBrain is unnecessary
+
+- **WHEN** the current request falls into the `stay-local` decision
+  class
+- **THEN** the skill guides Hermes not to call VeraBrain
+- **AND** the request continues through Hermes's own memory layers
+
+#### Scenario: Skill maps explicit intent to MCP tools
+
+- **WHEN** the current request falls into `save-to-verabrain` or
+  `retrieve-from-verabrain`
+- **THEN** the skill maps that decision to the corresponding VeraBrain
+  MCP tool
+- **AND** the skill does not invent a different persistence or retrieval
+  path
 
 ### Requirement: Define practical MVP interaction patterns
 
