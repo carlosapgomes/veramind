@@ -232,7 +232,7 @@ class PostgresMemoryRepository(MemoryRepository):
         where_clauses = ["(text ILIKE %(pattern)s OR embedding IS NOT NULL)"]
         params: dict[str, object] = {
             "pattern": _like_pattern(text),
-            "query_embedding": list(query_embedding),
+            "query_embedding": _vector_literal(query_embedding),
             "candidate_limit": memory_candidate_limit(limit),
         }
         if min_salience is not None:
@@ -257,13 +257,13 @@ class PostgresMemoryRepository(MemoryRepository):
               END AS lexical_score,
               CASE
                 WHEN %(query_embedding)s IS NULL OR embedding IS NULL THEN NULL
-                ELSE 1 - (embedding <=> %(query_embedding)s)
+                ELSE 1 - (embedding <=> %(query_embedding)s::vector)
               END AS semantic_score
             FROM memories
             WHERE {where_clause}
             ORDER BY
               CASE WHEN embedding IS NULL THEN NULL
-                ELSE embedding <=> %(query_embedding)s
+                ELSE embedding <=> %(query_embedding)s::vector
               END ASC NULLS LAST,
               salience DESC,
               updated_at DESC,
@@ -761,6 +761,10 @@ def _optional_metadata(value: object) -> Mapping[str, object]:
 
 def _like_pattern(value: str) -> str:
     return f"%{' '.join(value.split())}%"
+
+
+def _vector_literal(values: Sequence[float]) -> str:
+    return "[" + ",".join(str(float(value)) for value in values) + "]"
 
 
 def _rerank_memory_rows(
