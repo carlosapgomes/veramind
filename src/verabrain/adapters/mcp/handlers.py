@@ -52,7 +52,7 @@ class MCPApplicationAdapter:
             )
 
         try:
-            result = handler(args)
+            result = handler(_normalize_mcp_args(args))
         except ValueError as exc:
             return self._error(
                 tool_name=tool_name,
@@ -132,3 +132,14 @@ class MCPApplicationAdapter:
         request = list_review_queue_args_to_request(args)
         records = self.application.execution.list_review_queue(request)
         return {"items": [execution_record_to_mcp(record) for record in records]}
+
+
+def _normalize_mcp_args(args: Mapping[str, object]) -> Mapping[str, object]:
+    """Keep direct MCP arguments canonical while tolerating wrapped kwargs."""
+
+    kwargs = args.get("kwargs")
+    if kwargs is None:
+        return args
+    if not isinstance(kwargs, Mapping):
+        raise ValueError("'kwargs' must be an object when provided")
+    return {str(key): value for key, value in kwargs.items()}

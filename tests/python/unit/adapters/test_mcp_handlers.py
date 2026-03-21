@@ -180,6 +180,27 @@ def test_dispatch_routes_save_memory_to_the_application_service() -> None:
     assert unit_of_work.commits == 1
 
 
+def test_dispatch_unwraps_top_level_kwargs_for_compatibility() -> None:
+    adapter, unit_of_work = _build_adapter()
+
+    response = adapter.dispatch(
+        "save_memory",
+        {
+            "kwargs": {
+                "text": "User prefers concise answers.",
+                "type": "preference",
+                "scope": "long",
+                "source": "manual",
+            }
+        },
+    )
+
+    assert response["ok"] is True
+    result = cast(dict[str, object], response["result"])
+    assert result["id"] == "fixed-id"
+    assert unit_of_work.commits == 1
+
+
 def test_dispatch_returns_grouped_context_bundle_payloads() -> None:
     adapter, _ = _build_adapter()
 
@@ -219,6 +240,17 @@ def test_dispatch_reports_invalid_argument_errors_without_raising() -> None:
     assert response["ok"] is False
     error = cast(dict[str, object], response["error"])
     assert error["code"] == "invalid_arguments"
+
+
+def test_dispatch_rejects_malformed_wrapped_kwargs_payloads() -> None:
+    adapter, _ = _build_adapter()
+
+    response = adapter.dispatch("save_memory", {"kwargs": "not-an-object"})
+
+    assert response["ok"] is False
+    error = cast(dict[str, object], response["error"])
+    assert error["code"] == "invalid_arguments"
+    assert error["message"] == "'kwargs' must be an object when provided"
 
 
 def test_dispatch_reports_unknown_tools_without_raising() -> None:
