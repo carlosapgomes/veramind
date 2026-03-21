@@ -136,6 +136,15 @@ Resultados esperados:
 - o Hermes consome o recall do VeraBrain via MCP sem substituir seu
   próprio comportamento de memória local de sessão
 
+Nota de compatibilidade:
+
+- o formato canônico das tool calls MCP continua sendo argumentos
+  diretos no nível raiz
+- o adapter MCP do VeraBrain também tolera wrapping no formato
+  `{"kwargs": {...}}` para compatibilidade com o Hermes
+- essa compatibilidade existe apenas na fronteira do adapter MCP e não
+  altera os contratos de aplicação do VeraBrain
+
 ## 7. Camada opcional de skill
 
 Se você quiser que o Hermes carregue orientação procedural explícita
@@ -175,6 +184,20 @@ Depois tente novamente:
 ```bash
 uv run --env-file .env verabrain-mcp-local-mvp
 ```
+
+### As tool calls MCP falham porque os argumentos chegam embrulhados
+
+O adapter MCP do VeraBrain aceita:
+
+- argumentos diretos canônicos: `{...}`
+- argumentos embrulhados por compatibilidade: `{"kwargs": {...}}`
+
+Se o Hermes continuar falhando em uma tool call:
+
+- confirme que você está rodando um checkout recente do `verabrain` com
+  essa correção de compatibilidade
+- reinicie o processo MCP do VeraBrain
+- recarregue os servidores MCP do Hermes com `/reload-mcp`
 
 ### O startup do Postgres falha porque o driver está ausente
 

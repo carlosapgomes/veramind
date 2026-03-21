@@ -10,5 +10,5 @@
 
 - [x] Normalize top-level `kwargs` wrapping at the MCP adapter boundary
 - [x] Add adapter-level tests for direct and wrapped MCP argument shapes
-- [ ] Document the compatibility behavior in project context and the MVP
+- [x] Document the compatibility behavior in project context and the MVP
   runbook if the operational behavior changes
