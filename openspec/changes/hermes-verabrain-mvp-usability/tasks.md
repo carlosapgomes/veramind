@@ -9,7 +9,7 @@
 
 ## 2. Next implementation slices
 
-- [ ] Define the initial usability policy for when Hermes should consult
+- [x] Define the initial usability policy for when Hermes should consult
   VeraBrain versus rely on its own memory layers
 - [ ] Define the initial explicit user-intent phrases and behaviors for
   durable save and bounded recall

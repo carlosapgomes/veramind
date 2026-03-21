@@ -23,12 +23,55 @@ The usability layer MUST clarify when Hermes should:
 - call VeraBrain retrieval tools
 - call VeraBrain save tools
 
+The initial MVP usability policy MUST define three default decision
+classes:
+
+- `stay-local`
+- `retrieve-from-verabrain`
+- `save-to-verabrain`
+
+The initial default MUST be conservative:
+
+- Hermes stays local unless durable memory is clearly relevant
+- Hermes retrieves from VeraBrain only when cross-session durable recall
+  would materially help
+- Hermes saves to VeraBrain only when explicit durable-save intent is
+  strong enough
+
+The initial policy MUST treat these as practical rules of use, not as a
+replacement for the previously accepted memory-boundary model.
+
 #### Scenario: Hermes evaluates whether to involve VeraBrain
 
 - **WHEN** Hermes is handling a user request during the MVP phase
 - **THEN** Hermes has explicit procedural guidance for whether to stay
   local or call VeraBrain
 - **AND** that guidance preserves the existing authority boundary
+
+#### Scenario: Hermes defaults to local memory layers
+
+- **WHEN** the user request can be handled through prompt memory,
+  session-local context, episodic recall, or procedural guidance already
+  available in Hermes
+- **THEN** Hermes stays in the `stay-local` decision class
+- **AND** does not call VeraBrain by default
+
+#### Scenario: Hermes uses VeraBrain for durable recall
+
+- **WHEN** the user request suggests a need for durable cross-session
+  recall or bounded stored context
+- **THEN** Hermes moves into the `retrieve-from-verabrain` decision
+  class
+- **AND** uses the bounded VeraBrain retrieval path instead of treating
+  VeraBrain as a full replacement for local context
+
+#### Scenario: Hermes uses VeraBrain for explicit durable save
+
+- **WHEN** the user request clearly asks for durable preservation of an
+  idea, preference, project fact, or decision
+- **THEN** Hermes moves into the `save-to-verabrain` decision class
+- **AND** uses the explicit VeraBrain save path rather than silently
+  assuming the information was persisted
 
 ### Requirement: Define explicit user-intent-driven VeraBrain usage
 

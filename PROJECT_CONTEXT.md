@@ -226,5 +226,8 @@ Current project state:
 - The active usability change now has a design artifact for the Hermes
   decision flow, explicit intent patterns, and the role of the future
   `VeraBrain` skill
+- The initial usability policy is now fixed around three conservative
+  decision classes: `stay-local`, `retrieve-from-verabrain`, and
+  `save-to-verabrain`
 
 <!-- generated-by: project-context-maintainer -->

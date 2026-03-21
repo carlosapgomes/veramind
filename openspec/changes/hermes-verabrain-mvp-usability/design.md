@@ -26,6 +26,50 @@ The MVP usability flow should be:
 This preserves the previously accepted memory-boundary model while
 making it easier to use in real interaction.
 
+The initial decision policy should be expressed through three practical
+classes:
+
+- `stay-local`
+- `retrieve-from-verabrain`
+- `save-to-verabrain`
+
+These classes are intentionally conservative.
+
+### `stay-local`
+
+Use this when Hermes can already handle the request through:
+
+- prompt memory
+- session-local context
+- episodic recall
+- procedural guidance from skills or local runtime behavior
+
+This should remain the default class.
+
+### `retrieve-from-verabrain`
+
+Use this when the request benefits from durable cross-session memory,
+such as:
+
+- recalling prior stored facts about a topic
+- recovering bounded context for an ongoing project
+- checking what was explicitly saved for later use
+
+This class should trigger bounded retrieval, not broad or automatic
+knowledge expansion.
+
+### `save-to-verabrain`
+
+Use this when the user is clearly asking to preserve something durably,
+such as:
+
+- an idea worth keeping
+- a project fact or project context worth recovering later
+- a preference, rule, or decision worth reusing in future sessions
+
+This class should remain explicit and should not be inferred too
+aggressively from ordinary conversation.
+
 ## Hermes vs VeraBrain Usage Patterns
 
 The initial usage split should remain:
