@@ -219,7 +219,9 @@ Current project state:
   `verabrain-mcp-local-mvp` launcher, smoke-oriented integration
   coverage, project-local Compose database assets, and bilingual
   runbook documentation
-- Open the next OpenSpec change on top of the archived local MVP
-  baseline
+- The active change is now `hermes-verabrain-mvp-usability`
+- The next focus is the Hermes-facing usability layer over the existing
+  local MVP baseline, including the future `VeraBrain` skill as a
+  procedural layer over MCP
 
 <!-- generated-by: project-context-maintainer -->
